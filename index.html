@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Sales Cockpit V2.1</title>
+<title>Sales Cockpit V2.2</title>
 <style>
 :root{--bg:#f4f7fb;--card:#ffffff;--text:#152033;--muted:#667085;--line:#d9e2ec;--primary:#0f766e;--danger:#b42318;--warn:#b45309;--blue:#175cd3;--shadow:0 18px 40px rgba(16,24,40,.08);--r:18px;font-family:Inter,system-ui,Arial,sans-serif}
 [data-theme='dark']{--bg:#0b1220;--card:#111827;--text:#e5e7eb;--muted:#98a2b3;--line:#253041;--primary:#2dd4bf;--danger:#fb7185;--warn:#f59e0b;--blue:#60a5fa;--shadow:0 18px 40px rgba(0,0,0,.28)}
@@ -12,7 +12,8 @@
 .top{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap}
 .h1{font-size:clamp(26px,3vw,42px);font-weight:900;margin:0}.sub{color:var(--muted);margin-top:6px}
 .row{display:flex;gap:10px;flex-wrap:wrap}.btn{border:0;border-radius:999px;padding:12px 16px;background:var(--primary);color:#fff;font-weight:800;cursor:pointer}.btn.secondary{background:transparent;color:var(--text);border:1px solid var(--line)}.btn.danger{background:var(--danger)}
-.grid{display:grid;gap:14px}.kpis{grid-template-columns:repeat(6,minmax(0,1fr))}.main{grid-template-columns:1.15fr .85fr}.bottom{grid-template-columns:1fr 1fr 1fr}
+.btn.sm{padding:8px 10px;font-size:13px;min-height:32px}.btn.icon{padding:8px 10px;min-width:32px;min-height:32px}
+.grid{display:grid;gap:14px}.kpis{grid-template-columns:repeat(6,minmax(0,1fr))}.main{grid-template-columns:1.15fr .85fr}.bottom{grid-template-columns:1.25fr 1fr .95fr}
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:18px}
 .kpi .label,.section-label{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}.kpi .value{font-size:32px;font-weight:900;margin-top:8px}.kpi .foot{color:var(--muted);margin-top:4px;font-size:14px}
 .head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap}.head h2{margin:0;font-size:20px}
@@ -26,18 +27,19 @@
 input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:14px;background:transparent;color:var(--text)} textarea{resize:vertical;min-height:110px}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:16px}.modal.open{display:flex}.modal-card{width:min(860px,100%);background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:18px}
 .modal-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}.x{background:transparent;border:1px solid var(--line);color:var(--text);border-radius:12px;padding:10px 12px;cursor:pointer}
-.calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px}.day{min-height:180px;padding:12px;border:1px solid var(--line);border-radius:16px;background:color-mix(in oklab,var(--card) 90%, var(--bg))}.day h4{margin:0 0 8px}.event{padding:8px 10px;border-radius:12px;margin-top:8px;font-size:13px;color:#fff;cursor:pointer;position:relative}.event .mini{font-size:12px;opacity:.9;margin-top:3px}.event .del{position:absolute;top:6px;right:8px;background:rgba(255,255,255,.2);border:0;color:#fff;border-radius:999px;width:22px;height:22px;cursor:pointer}
+.calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px}.day{min-height:230px;padding:12px;border:1px solid var(--line);border-radius:16px;background:color-mix(in oklab,var(--card) 90%, var(--bg))}.day h4{margin:0 0 8px;font-size:16px}.event{padding:8px 10px;border-radius:12px;margin-top:8px;font-size:13px;color:#fff;cursor:pointer;position:relative}.event .mini{font-size:12px;opacity:.9;margin-top:3px}.event .del{position:absolute;top:6px;right:8px;background:rgba(255,255,255,.2);border:0;color:#fff;border-radius:999px;width:22px;height:22px;cursor:pointer}
 .blueBg{background:var(--blue)}.greenBg{background:var(--primary)}.amberBg{background:var(--warn)}.roseBg{background:var(--danger)}
 .stats{display:grid;gap:10px}.stat{display:flex;justify-content:space-between;gap:10px;padding:12px;border:1px solid var(--line);border-radius:14px;background:color-mix(in oklab,var(--card) 90%, var(--bg))}.sr{position:absolute;left:-9999px}
-@media(max-width:1200px){.kpis,.main,.bottom,.person-row,.item,.editor,.calendar,.searchbar{grid-template-columns:1fr 1fr}.person-row{grid-template-columns:1fr}.top{align-items:stretch}.wrap{padding:14px}}
-@media(max-width:720px){.kpis,.main,.bottom,.calendar,.editor,.item,.person-row,.searchbar{grid-template-columns:1fr}.item{grid-template-columns:1fr}.modal-card{padding:14px}}
+.finance{display:grid;gap:10px}.fitem{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:16px;background:color-mix(in oklab,var(--card) 90%, var(--bg))}.money{font-weight:900}.plus{color:var(--primary)}.minus{color:var(--danger)}
+@media(max-width:1200px){.kpis,.main,.bottom,.person-row,.item,.editor,.calendar,.searchbar,.finance{grid-template-columns:1fr 1fr}.person-row{grid-template-columns:1fr}.top{align-items:stretch}.wrap{padding:14px}}
+@media(max-width:720px){.kpis,.main,.bottom,.calendar,.editor,.item,.person-row,.searchbar,.finance{grid-template-columns:1fr}.item{grid-template-columns:1fr}.modal-card{padding:14px}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="top">
-    <div><div class="h1">Sales Cockpit V2.1</div><div class="sub">Design simple, clair et plus proche de la V2, avec les fonctions essentielles du cockpit commercial.</div></div>
-    <div class="row"><button class="btn secondary" id="themeBtn">Mode sombre</button><button class="btn secondary" id="resetBtn">Réinitialiser</button><button class="btn" id="addSellerTop">+ Vendeur</button></div>
+    <div><div class="h1">Sales Cockpit V2.2</div><div class="sub">Boutons plus petits, planning plus grand et plus lisible, ajout d’un bloc financement.</div></div>
+    <div class="row"><button class="btn secondary sm" id="themeBtn">Mode sombre</button><button class="btn secondary sm" id="resetBtn">Réinitialiser</button><button class="btn sm" id="addSellerTop">+ Vendeur</button></div>
   </div>
 
   <div class="grid kpis">
@@ -51,7 +53,7 @@ input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);
 
   <div class="grid main">
     <div class="card">
-      <div class="head"><h2>Vendeurs</h2><div class="toolbar"><input class="search" id="sellerSearch" placeholder="Rechercher un vendeur..."><select class="pill" id="sellerFilter"><option value="all">Tous</option></select><input class="date" id="fromDate" type="date"><input class="date" id="toDate" type="date"><button class="btn secondary" id="exportCsvBtn">CSV</button><button class="btn secondary" id="exportBtn">JSON</button><label class="btn secondary" style="cursor:pointer"><input class="sr" type="file" id="importJson" accept="application/json">Importer</label></div></div>
+      <div class="head"><h2>Vendeurs</h2><div class="toolbar"><input class="search" id="sellerSearch" placeholder="Rechercher un vendeur..."><select class="pill" id="sellerFilter"><option value="all">Tous</option></select><input class="date" id="fromDate" type="date"><input class="date" id="toDate" type="date"><button class="btn secondary sm" id="exportCsvBtn">CSV</button><button class="btn secondary sm" id="exportBtn">JSON</button><label class="btn secondary sm" style="cursor:pointer"><input class="sr" type="file" id="importJson" accept="application/json">Importer</label></div></div>
       <div class="list" id="sellerList"></div>
     </div>
     <div class="card">
@@ -65,19 +67,23 @@ input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);
         <input id="sRdv" type="number" placeholder="RDV / jour">
         <select id="sStatus"><option value="ok">Dans le rythme</option><option value="amber">À surveiller</option><option value="rose">En retard</option></select>
         <textarea class="full" id="sNotes" placeholder="Notes / priorités"></textarea>
-        <div class="full row"><button class="btn" type="submit">Sauvegarder</button><button class="btn secondary" type="button" id="clearSeller">Vider</button></div>
+        <div class="full row"><button class="btn sm" type="submit">Sauvegarder</button><button class="btn secondary sm" type="button" id="clearSeller">Vider</button></div>
       </form>
     </div>
   </div>
 
   <div class="grid bottom">
     <div class="card">
-      <div class="head"><h2>Planning semaine</h2><div class="row"><button class="btn secondary" id="addEventBtn">+ Créneau</button></div></div>
+      <div class="head"><h2>Planning semaine</h2><span class="tag blue">Plus grand</span></div>
       <div class="calendar" id="calendar"></div>
     </div>
     <div class="card">
-      <div class="head"><h2>Actions du jour</h2><button class="btn secondary" id="addTaskBtn">+ Action</button></div>
+      <div class="head"><h2>Actions du jour</h2><button class="btn secondary sm" id="addTaskBtn">+ Action</button></div>
       <div class="table" id="taskList"></div>
+    </div>
+    <div class="card">
+      <div class="head"><h2>Financements</h2><button class="btn secondary sm" id="addFinanceBtn">+ Financement</button></div>
+      <div class="finance" id="financeList"></div>
     </div>
   </div>
 
@@ -87,36 +93,25 @@ input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);
       <div class="stats" id="statsBox"></div>
     </div>
     <div class="card">
-      <div class="head"><h2>Historique</h2><button class="btn secondary" id="clearHistoryBtn">Vider</button></div>
+      <div class="head"><h2>Historique</h2><button class="btn secondary sm" id="clearHistoryBtn">Vider</button></div>
       <div class="stats" id="historyList"></div>
     </div>
     <div class="card">
       <div class="head"><h2>Raccourcis</h2><span class="tag amber">Pratique</span></div>
       <div class="stats">
-        <div class="stat"><div><strong>Ajouter vendeur</strong><div class="small">Créer une nouvelle fiche</div></div><button class="btn secondary" id="newSellerBtn">Créer</button></div>
-        <div class="stat"><div><strong>Ajouter créneau</strong><div class="small">Popup calendrier</div></div><button class="btn secondary" id="newEventBtn">Créer</button></div>
-        <div class="stat"><div><strong>Reset filtre</strong><div class="small">Toute l’équipe</div></div><button class="btn secondary" id="clearFilterBtn">Reset</button></div>
+        <div class="stat"><div><strong>Ajouter vendeur</strong><div class="small">Créer une nouvelle fiche</div></div><button class="btn secondary sm" id="newSellerBtn">Créer</button></div>
+        <div class="stat"><div><strong>Ajouter créneau</strong><div class="small">Popup calendrier</div></div><button class="btn secondary sm" id="newEventBtn">Créer</button></div>
+        <div class="stat"><div><strong>Reset filtre</strong><div class="small">Toute l’équipe</div></div><button class="btn secondary sm" id="clearFilterBtn">Reset</button></div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="modal" id="eventModal">
-  <div class="modal-card">
-    <div class="modal-head"><h2 style="margin:0">Créer / modifier un créneau</h2><button class="x" id="closeModal">Fermer</button></div>
-    <form id="eventForm" class="editor">
-      <input class="full" id="eTitle" placeholder="Titre du créneau">
-      <input id="eDay" placeholder="Jour" value="Lundi">
-      <input id="eTime" placeholder="Heure" value="09:00">
-      <select id="eColor"><option value="green">Vert</option><option value="blue">Bleu</option><option value="amber">Orange</option><option value="rose">Rose</option></select>
-      <textarea class="full" id="eDetail" placeholder="Détail"></textarea>
-      <div class="full row"><button class="btn" type="submit">Enregistrer</button><button class="btn secondary" type="button" id="cancelEvent">Annuler</button></div>
-    </form>
-  </div>
-</div>
+<div class="modal" id="eventModal"><div class="modal-card"><div class="modal-head"><h2 style="margin:0">Créer / modifier un créneau</h2><button class="x" id="closeModal">Fermer</button></div><form id="eventForm" class="editor"><input class="full" id="eTitle" placeholder="Titre du créneau"><input id="eDay" placeholder="Jour" value="Lundi"><input id="eTime" placeholder="Heure" value="09:00"><select id="eColor"><option value="green">Vert</option><option value="blue">Bleu</option><option value="amber">Orange</option><option value="rose">Rose</option></select><textarea class="full" id="eDetail" placeholder="Détail"></textarea><div class="full row"><button class="btn sm" type="submit">Enregistrer</button><button class="btn secondary sm" type="button" id="cancelEvent">Annuler</button></div></form></div></div>
+<div class="modal" id="financeModal"><div class="modal-card"><div class="modal-head"><h2 style="margin:0">Créer / modifier un financement</h2><button class="x" id="closeFinance">Fermer</button></div><form id="financeForm" class="editor"><input class="full" id="fClient" placeholder="Client"><input id="fType" placeholder="Type" value="LOA"><input id="fAmount" type="number" placeholder="Montant"><input id="fRate" type="number" placeholder="Taux %"><select id="fStatus"><option value="ok">Accepté</option><option value="amber">En attente</option><option value="rose">Refusé</option></select><textarea class="full" id="fNotes" placeholder="Notes"></textarea><div class="full row"><button class="btn sm" type="submit">Enregistrer</button><button class="btn secondary sm" type="button" id="cancelFinance">Annuler</button></div></form></div></div>
 
 <script>
-const LS='salesCockpitV2_1';
+const LS='salesCockpitV2_2';
 const defaults={theme:'light',selectedFilter:'all',history:[], sellers:[
 {id:1,name:'Martial Gremont',team:'Volkswagen',target:11,done:7,calls:10,rdv:2,status:'ok',notes:'Suivi reprises, financement et relances.'},
 {id:2,name:'Yann Ormes',team:'Audi',target:11,done:6,calls:10,rdv:2,status:'amber',notes:'Phoning, dossiers à signer et relances.'}
@@ -127,9 +122,12 @@ const defaults={theme:'light',selectedFilter:'all',history:[], sellers:[
 ], tasks:[
 {id:1,text:'Valider le planning showroom',done:true},
 {id:2,text:'Contrôler les leads non traités',done:false}
+], finances:[
+{id:1,client:'Client A',type:'LOA',amount:28400,rate:3.2,status:'ok',notes:'Dossier complet'},
+{id:2,client:'Client B',type:'Crédit',amount:19800,rate:4.1,status:'amber',notes:'En attente de validation'}
 ]};
-let state=load(); let editingSellerId=null; let editingEventId=null;
-const el={sellerList:document.getElementById('sellerList'),calendar:document.getElementById('calendar'),taskList:document.getElementById('taskList'),sellerFilter:document.getElementById('sellerFilter'),eventModal:document.getElementById('eventModal'),statsBox:document.getElementById('statsBox'),historyList:document.getElementById('historyList')};
+let state=load(); let editingSellerId=null; let editingEventId=null; let editingFinanceId=null;
+const el={sellerList:document.getElementById('sellerList'),calendar:document.getElementById('calendar'),taskList:document.getElementById('taskList'),financeList:document.getElementById('financeList'),sellerFilter:document.getElementById('sellerFilter'),eventModal:document.getElementById('eventModal'),financeModal:document.getElementById('financeModal'),statsBox:document.getElementById('statsBox'),historyList:document.getElementById('historyList')};
 function load(){try{const s=localStorage.getItem(LS);return s?JSON.parse(s):structuredClone(defaults)}catch(e){return structuredClone(defaults)}}
 function save(msg='Sauvegarde'){localStorage.setItem(LS,JSON.stringify(state));pushHistory(msg);render()}
 function pushHistory(msg){state.history=[{id:uid(),time:new Date().toLocaleString('fr-FR'),msg},...state.history].slice(0,10)}
@@ -137,11 +135,11 @@ function uid(){return Date.now()+Math.floor(Math.random()*1000)}
 function esc(v){return String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;')}
 function initials(n){return n.split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0].toUpperCase()).join('')}
 function colorClass(c){return c==='blue'?'blueBg':c==='amber'?'amberBg':c==='rose'?'roseBg':'greenBg'}
-function calc(){const target=state.sellers.reduce((a,s)=>a+(+s.target||0),0);const done=state.sellers.reduce((a,s)=>a+(+s.done||0),0);const rdv=state.sellers.reduce((a,s)=>a+(+s.rdv||0),0);document.getElementById('kpiTarget').textContent=target;document.getElementById('kpiDone').textContent=done;document.getElementById('kpiRate').textContent=target?Math.round(done/target*100)+'%':'0%';document.getElementById('kpiRdv').textContent=rdv;document.getElementById('kpiTodo').textContent=state.tasks.length;document.getElementById('kpiSellers').textContent=state.sellers.length;el.statsBox.innerHTML=[['Ventes / vendeur',state.sellers.length?Math.round(done/state.sellers.length):0],['Appels / vendeur',state.sellers.length?Math.round(state.sellers.reduce((a,s)=>a+(+s.calls||0),0)/state.sellers.length):0],['RDV / vendeur',state.sellers.length?Math.round(rdv/state.sellers.length):0],['Créneaux semaine',state.events.length],['Tâches ouvertes',state.tasks.filter(t=>!t.done).length]].map(([k,v])=>`<div class="stat"><div><strong>${k}</strong><div class="small">Indicateur calculé automatiquement</div></div><div><strong>${v}</strong></div></div>`).join('');el.historyList.innerHTML=(state.history||[]).map(h=>`<div class="stat"><div><strong>${esc(h.msg)}</strong><div class="small">${esc(h.time)}</div></div></div>`).join('')||'<div class="small">Aucun historique</div>'}
+function calc(){const target=state.sellers.reduce((a,s)=>a+(+s.target||0),0);const done=state.sellers.reduce((a,s)=>a+(+s.done||0),0);const rdv=state.sellers.reduce((a,s)=>a+(+s.rdv||0),0);const fin=state.finances.length;const finOk=state.finances.filter(f=>f.status==='ok').length;document.getElementById('kpiTarget').textContent=target;document.getElementById('kpiDone').textContent=done;document.getElementById('kpiRate').textContent=target?Math.round(done/target*100)+'%':'0%';document.getElementById('kpiRdv').textContent=rdv;document.getElementById('kpiTodo').textContent=state.tasks.length;document.getElementById('kpiSellers').textContent=state.sellers.length;el.statsBox.innerHTML=[['Ventes / vendeur',state.sellers.length?Math.round(done/state.sellers.length):0],['Appels / vendeur',state.sellers.length?Math.round(state.sellers.reduce((a,s)=>a+(+s.calls||0),0)/state.sellers.length):0],['RDV / vendeur',state.sellers.length?Math.round(rdv/state.sellers.length):0],['Créneaux semaine',state.events.length],['Tâches ouvertes',state.tasks.filter(t=>!t.done).length],['Financements',fin]].map(([k,v])=>`<div class="stat"><div><strong>${k}</strong><div class="small">Indicateur calculé automatiquement</div></div><div><strong>${v}</strong></div></div>`).join('');el.historyList.innerHTML=(state.history||[]).map(h=>`<div class="stat"><div><strong>${esc(h.msg)}</strong><div class="small">${esc(h.time)}</div></div></div>`).join('')||'<div class="small">Aucun historique</div>';el.financeList.innerHTML=state.finances.map(f=>`<div class="fitem"><div><strong>${esc(f.client)}</strong><div class="small">${esc(f.type)} • ${esc(f.notes)}</div></div><div class="money ${f.status==='ok'?'plus':f.status==='rose'?'minus':''}">${Number(f.amount||0).toLocaleString('fr-FR')} €</div><div class="row"><span class="tag ${f.status}">${f.status==='ok'?'Accepté':f.status==='amber'?'En attente':'Refusé'}</span><button class="btn secondary sm" onclick="editFinance(${f.id})">Modifier</button><button class="btn danger sm" onclick="deleteFinance(${f.id})">Supprimer</button></div></div>`).join('')}
 function renderFilter(){el.sellerFilter.innerHTML='<option value="all">Tous</option>'+state.sellers.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');el.sellerFilter.value=state.selectedFilter||'all'}
-function renderSellers(){const q=(document.getElementById('sellerSearch').value||'').toLowerCase();const f=el.sellerFilter.value||'all';const arr=state.sellers.filter(s=>(f==='all'||String(s.id)===f)&&(!q||`${s.name} ${s.team} ${s.notes}`.toLowerCase().includes(q)));el.sellerList.innerHTML=arr.map(s=>{const pct=Math.min(100,Math.round(((+s.done||0)/((+s.target||1)))*100));const status=s.status||'ok';const label=status==='ok'?'Dans le rythme':status==='amber'?'À surveiller':'En retard';return `<div class="person-row"><div class="person"><div class="avatar">${initials(s.name)}</div><div><div><strong>${esc(s.name)}</strong></div><div class="small">${esc(s.team)}</div><div class="small">${esc(s.notes)}</div></div></div><div><div class="small">Objectif</div><strong contenteditable="true" onblur="updateSeller(${s.id},'target',this.textContent)">${+s.target||0}</strong></div><div><div class="small">Réalisé</div><strong contenteditable="true" onblur="updateSeller(${s.id},'done',this.textContent)">${+s.done||0}</strong></div><div><div class="small">Progression</div><div class="progress"><div class="bar" style="width:${pct}%"></div></div></div><div class="row"><span class="tag ${status}">${label}</span><button class="btn secondary" onclick="loadSeller(${s.id})">Modifier</button><button class="btn danger" onclick="deleteSeller(${s.id})">Supprimer</button></div></div>`}).join('')||'<div class="small">Aucun résultat</div>'}
+function renderSellers(){const q=(document.getElementById('sellerSearch').value||'').toLowerCase();const f=el.sellerFilter.value||'all';const arr=state.sellers.filter(s=>(f==='all'||String(s.id)===f)&&(!q||`${s.name} ${s.team} ${s.notes}`.toLowerCase().includes(q)));el.sellerList.innerHTML=arr.map(s=>{const pct=Math.min(100,Math.round(((+s.done||0)/((+s.target||1)))*100));const status=s.status||'ok';const label=status==='ok'?'Dans le rythme':status==='amber'?'À surveiller':'En retard';return `<div class="person-row"><div class="person"><div class="avatar">${initials(s.name)}</div><div><div><strong>${esc(s.name)}</strong></div><div class="small">${esc(s.team)}</div><div class="small">${esc(s.notes)}</div></div></div><div><div class="small">Objectif</div><strong contenteditable="true" onblur="updateSeller(${s.id},'target',this.textContent)">${+s.target||0}</strong></div><div><div class="small">Réalisé</div><strong contenteditable="true" onblur="updateSeller(${s.id},'done',this.textContent)">${+s.done||0}</strong></div><div><div class="small">Progression</div><div class="progress"><div class="bar" style="width:${pct}%"></div></div></div><div class="row"><span class="tag ${status}">${label}</span><button class="btn secondary sm" onclick="loadSeller(${s.id})">Modifier</button><button class="btn danger sm" onclick="deleteSeller(${s.id})">Supprimer</button></div></div>`}).join('')||'<div class="small">Aucun résultat</div>'}
 function renderCalendar(){const days=['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];el.calendar.innerHTML=days.map(d=>`<div class="day"><h4>${d}</h4>${state.events.filter(e=>e.day===d).sort((a,b)=>a.time.localeCompare(b.time)).map(e=>`<div class="event ${colorClass(e.color)}" onclick="editEvent(${e.id})"><button class="del" title="Supprimer" onclick="event.stopPropagation();deleteEvent(${e.id})">×</button><strong>${esc(e.time)}</strong> ${esc(e.title)}<div class="mini">${esc(e.detail)}</div></div>`).join('')||'<div class="small">Aucun créneau</div>'}</div>`).join('')}
-function renderTasks(){el.taskList.innerHTML=state.tasks.map(t=>`<div class="item todo-item ${t.done?'done':''}"><input class="check" type="checkbox" ${t.done?'checked':''} onchange="toggleTask(${t.id},this.checked)"><input class="txt" value="${esc(t.text)}" onblur="updateTask(${t.id},this.value)"><button class="btn danger" onclick="deleteTask(${t.id})">Supprimer</button></div>`).join('')}
+function renderTasks(){el.taskList.innerHTML=state.tasks.map(t=>`<div class="item todo-item ${t.done?'done':''}"><input class="check" type="checkbox" ${t.done?'checked':''} onchange="toggleTask(${t.id},this.checked)"><input class="txt" value="${esc(t.text)}" onblur="updateTask(${t.id},this.value)"><button class="btn danger sm" onclick="deleteTask(${t.id})">Supprimer</button></div>`).join('')}
 function render(){document.documentElement.dataset.theme=state.theme||'light';document.getElementById('themeBtn').textContent=state.theme==='dark'?'Mode clair':'Mode sombre';renderFilter();calc();renderSellers();renderCalendar();renderTasks();document.getElementById('editLabel').textContent=editingSellerId?'Vendeur en édition':'Aucune sélection'}
 window.updateSeller=(id,key,val)=>{const s=state.sellers.find(x=>x.id===id);if(!s)return;s[key]=['target','done','calls','rdv'].includes(key)?+val||0:val;save('Vendeur modifié')}
 window.loadSeller=(id)=>{const s=state.sellers.find(x=>x.id===id);if(!s)return;editingSellerId=id;document.getElementById('sName').value=s.name;document.getElementById('sTeam').value=s.team;document.getElementById('sTarget').value=s.target;document.getElementById('sDone').value=s.done;document.getElementById('sCalls').value=s.calls;document.getElementById('sRdv').value=s.rdv;document.getElementById('sStatus').value=s.status||'ok';document.getElementById('sNotes').value=s.notes;render()}
@@ -151,6 +149,8 @@ window.updateTask=(id,text)=>{const t=state.tasks.find(x=>x.id===id);if(t){t.tex
 window.deleteTask=(id)=>{state.tasks=state.tasks.filter(x=>x.id!==id);save('Action supprimée')}
 window.editEvent=(id)=>{const e=state.events.find(x=>x.id===id);if(!e)return;editingEventId=id;eTitle.value=e.title;eDay.value=e.day;eTime.value=e.time;eColor.value=e.color;eDetail.value=e.detail;el.eventModal.classList.add('open')}
 window.deleteEvent=(id)=>{state.events=state.events.filter(x=>x.id!==id);save('Créneau supprimé')}
+window.editFinance=(id)=>{const f=state.finances.find(x=>x.id===id);if(!f)return;editingFinanceId=id;fClient.value=f.client;fType.value=f.type;fAmount.value=f.amount;fRate.value=f.rate;fStatus.value=f.status;fNotes.value=f.notes;el.financeModal.classList.add('open')}
+window.deleteFinance=(id)=>{state.finances=state.finances.filter(x=>x.id!==id);save('Financement supprimé')}
 function clearSeller(){editingSellerId=null;document.getElementById('sellerForm').reset();render()}
 document.getElementById('sellerForm').addEventListener('submit',e=>{e.preventDefault();const obj={name:sName.value.trim(),team:sTeam.value.trim(),target:+sTarget.value||0,done:+sDone.value||0,calls:+sCalls.value||0,rdv:+sRdv.value||0,status:sStatus.value,notes:sNotes.value.trim()};if(!obj.name)return;if(editingSellerId){Object.assign(state.sellers.find(x=>x.id===editingSellerId),obj)}else{state.sellers.push({id:uid(),...obj})}editingSellerId=null;save('Vendeur ajouté / modifié');e.target.reset()})
 document.getElementById('addSellerTop').onclick=clearSeller
@@ -166,15 +166,19 @@ document.getElementById('eventForm').addEventListener('submit',e=>{e.preventDefa
 document.getElementById('closeModal').onclick=()=>el.eventModal.classList.remove('open')
 document.getElementById('cancelEvent').onclick=()=>el.eventModal.classList.remove('open')
 document.getElementById('addTaskBtn').onclick=()=>{state.tasks.push({id:uid(),text:'Nouvelle action',done:false});save('Action ajoutée')}
-document.getElementById('exportBtn').onclick=()=>downloadJSON(state,'sales-cockpit-v2.1.json')
-document.getElementById('exportCsvBtn').onclick=()=>downloadCSV(state,'sales-cockpit-v2.1.csv')
+document.getElementById('addFinanceBtn').onclick=()=>{editingFinanceId=null;document.getElementById('financeForm').reset();fStatus.value='ok';el.financeModal.classList.add('open')}
+document.getElementById('financeForm').addEventListener('submit',e=>{e.preventDefault();const obj={client:fClient.value.trim(),type:fType.value.trim(),amount:+fAmount.value||0,rate:+fRate.value||0,status:fStatus.value,notes:fNotes.value.trim()};if(!obj.client)return;if(editingFinanceId){Object.assign(state.finances.find(x=>x.id===editingFinanceId),obj)}else{state.finances.push({id:uid(),...obj})}editingFinanceId=null;el.financeModal.classList.remove('open');save('Financement ajouté / modifié')})
+document.getElementById('closeFinance').onclick=()=>el.financeModal.classList.remove('open')
+document.getElementById('cancelFinance').onclick=()=>el.financeModal.classList.remove('open')
+document.getElementById('exportBtn').onclick=()=>downloadJSON(state,'sales-cockpit-v2.2.json')
+document.getElementById('exportCsvBtn').onclick=()=>downloadCSV(state,'sales-cockpit-v2.2.csv')
 document.getElementById('importJson').onchange=async e=>{const file=e.target.files[0]; if(!file) return; const txt=await file.text(); try{const obj=JSON.parse(txt); state={...state,...obj}; save('JSON importé')}catch(err){alert('JSON invalide')}}
 document.getElementById('themeBtn').onclick=()=>{state.theme=state.theme==='dark'?'light':'dark';save('Thème modifié')}
 document.getElementById('resetBtn').onclick=()=>{if(confirm('Réinitialiser toutes les données ?')){localStorage.removeItem(LS);location.reload()}}
 document.getElementById('clearFilterBtn').onclick=()=>{state.selectedFilter='all';save('Filtre réinitialisé')}
 document.getElementById('clearHistoryBtn').onclick=()=>{state.history=[];save('Historique vidé')}
 function downloadJSON(obj,name){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(obj,null,2)],{type:'application/json'}));a.download=name;a.click()}
-function downloadCSV(s,name){const rows=[['type','id','name','team','target','done','calls','rdv','status','notes','day','time','title','detail','color'],...s.sellers.map(x=>['seller',x.id,x.name,x.team,x.target,x.done,x.calls,x.rdv,x.status,x.notes,'','','','','']),...s.events.map(x=>['event',x.id,'','','','','','','',x.day,x.time,x.title,x.detail,x.color]),...s.tasks.map(x=>['task',x.id,x.text,x.done,'','','','','','','','','',''])];const csv=rows.map(r=>r.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=name;a.click()}
+function downloadCSV(s,name){const rows=[['type','id','name','team','target','done','calls','rdv','status','notes','day','time','title','detail','color','client','amount','rate'],...s.sellers.map(x=>['seller',x.id,x.name,x.team,x.target,x.done,x.calls,x.rdv,x.status,x.notes,'','','','','','','','']),...s.events.map(x=>['event',x.id,'','','','','','','',x.day,x.time,x.title,x.detail,x.color,'','','']),...s.finances.map(x=>['finance',x.id,'','','','','','','', '','','','', '',x.client,x.amount,x.rate]),...s.tasks.map(x=>['task',x.id,x.text,x.done,'','','','','','','','','','','','','',''])];const csv=rows.map(r=>r.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=name;a.click()}
 render();
 </script>
 </body>
