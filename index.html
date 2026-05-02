@@ -3,44 +3,45 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Sales Cockpit VW</title>
+<title>Sales Cockpit V10 VW</title>
 <style>
-:root{--bg:#f5f7fb;--card:#ffffff;--text:#152033;--muted:#667085;--line:#d9e2ec;--primary:#0d5aa7;--primary2:#1e7bd8;--danger:#c62828;--warn:#b45309;--shadow:0 18px 40px rgba(16,24,40,.08);--r:18px;font-family:Inter,system-ui,Arial,sans-serif}
-[data-theme='dark']{--bg:#0b1220;--card:#111827;--text:#e5e7eb;--muted:#98a2b3;--line:#253041;--primary:#4ea3ff;--primary2:#8cc8ff;--danger:#fb7185;--warn:#fbbf24;--shadow:0 18px 40px rgba(0,0,0,.28)}
+:root{--bg:#f5f7fb;--card:#ffffff;--text:#152033;--muted:#667085;--line:#d9e2ec;--primary:#0d5aa7;--primary2:#1e7bd8;--danger:#b42318;--warn:#b45309;--ok:#0f766e;--shadow:0 18px 40px rgba(16,24,40,.08);--r:18px;font-family:Inter,system-ui,Arial,sans-serif}
+[data-theme='dark']{--bg:#0b1220;--card:#111827;--text:#e5e7eb;--muted:#98a2b3;--line:#253041;--primary:#4ea3ff;--primary2:#8cc8ff;--danger:#fb7185;--warn:#fbbf24;--ok:#2dd4bf;--shadow:0 18px 40px rgba(0,0,0,.28)}
 *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text)} button,input,select,textarea{font:inherit}
-.wrap{max-width:1500px;margin:0 auto;padding:22px;display:grid;gap:16px}
-.top{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap}
-.h1{font-size:clamp(26px,3vw,42px);font-weight:900;margin:0;color:var(--primary)}.sub{color:var(--muted);margin-top:6px}
-.row{display:flex;gap:10px;flex-wrap:wrap}.btn{border:0;border-radius:999px;padding:12px 16px;background:var(--primary);color:#fff;font-weight:800;cursor:pointer}.btn.secondary{background:transparent;color:var(--text);border:1px solid var(--line)}.btn.danger{background:var(--danger)}
-.btn.sm{padding:8px 10px;font-size:13px;min-height:32px}.btn.icon{padding:8px 10px;min-width:32px;min-height:32px}
+.wrap{max-width:1560px;margin:0 auto;padding:22px;display:grid;gap:16px}
+.hero{background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;border-radius:24px;padding:24px;box-shadow:var(--shadow)}
+.top{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap}.h1{font-size:clamp(30px,4vw,48px);font-weight:900;margin:0}.sub{opacity:.94;margin-top:8px;max-width:82ch}
+.row{display:flex;gap:10px;flex-wrap:wrap}.btn{border:0;border-radius:999px;padding:10px 14px;background:#fff;color:#0f172a;font-weight:800;cursor:pointer}.btn.secondary{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.18)}.btn.danger{background:var(--danger);color:#fff}.btn.sm{padding:7px 10px;font-size:13px}
 .grid{display:grid;gap:14px}.kpis{grid-template-columns:repeat(6,minmax(0,1fr))}.main{grid-template-columns:1.15fr .85fr}.bottom{grid-template-columns:1.25fr 1fr .95fr}
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:18px}
 .kpi .label,.section-label{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}.kpi .value{font-size:32px;font-weight:900;margin-top:8px;color:var(--primary)}.kpi .foot{color:var(--muted);margin-top:4px;font-size:14px}
 .head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap}.head h2{margin:0;font-size:20px;color:var(--primary)}
 .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.pill,.search,.date{border:1px solid var(--line);border-radius:999px;padding:10px 14px;background:transparent;color:var(--text)}
 .list{display:grid;gap:10px}.person-row{display:grid;grid-template-columns:1.15fr .7fr .7fr .9fr auto;gap:10px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--card)}
-.person{display:flex;gap:12px;align-items:center}.avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:color-mix(in oklab,var(--primary) 12%, var(--card));color:var(--primary);font-weight:900}
+.person{display:flex;gap:12px;align-items:center}.avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:color-mix(in oklab,var(--primary) 15%, var(--card));color:var(--primary);font-weight:900}
 .small{font-size:12px;color:var(--muted)} .progress{height:10px;background:var(--line);border-radius:999px;overflow:hidden}.bar{height:100%;background:linear-gradient(90deg,var(--primary),var(--primary2))}
-.tag{display:inline-flex;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:800}.ok{background:color-mix(in oklab,var(--primary) 16%, var(--card));color:var(--primary)}.amber{background:color-mix(in oklab,var(--warn) 18%, var(--card));color:var(--warn)}.blue{background:color-mix(in oklab,var(--primary2) 16%, var(--card));color:var(--primary2)}.rose{background:color-mix(in oklab,var(--danger) 16%, var(--card));color:var(--danger)}
+.tag{display:inline-flex;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:800}.ok{background:color-mix(in oklab,var(--ok) 18%, var(--card));color:var(--ok)}.amber{background:color-mix(in oklab,var(--warn) 18%, var(--card));color:var(--warn)}.blue{background:color-mix(in oklab,var(--primary2) 16%, var(--card));color:var(--primary2)}.rose{background:color-mix(in oklab,var(--danger) 16%, var(--card));color:var(--danger)}
 .table{display:grid;gap:10px}.item{display:grid;grid-template-columns:90px 1fr auto;gap:10px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--card)}.todo-item{grid-template-columns:auto 1fr auto}.done .txt{text-decoration:line-through;color:var(--muted)}.check{width:20px;height:20px}
-.editor{display:grid;gap:10px;grid-template-columns:repeat(2,minmax(0,1fr))}.full{grid-column:1/-1}.searchbar{display:grid;grid-template-columns:1fr auto auto auto;gap:10px;margin-bottom:10px}
+.editor{display:grid;gap:10px;grid-template-columns:repeat(2,minmax(0,1fr))}.full{grid-column:1/-1}
 input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:14px;background:transparent;color:var(--text)} textarea{resize:vertical;min-height:110px}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:16px}.modal.open{display:flex}.modal-card{width:min(860px,100%);background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:18px}
 .modal-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}.x{background:transparent;border:1px solid var(--line);color:var(--text);border-radius:12px;padding:10px 12px;cursor:pointer}
 .calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px}.day{min-height:230px;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--card)}.day h4{margin:0 0 8px;font-size:16px;color:var(--primary)}.event{padding:8px 10px;border-radius:12px;margin-top:8px;font-size:13px;color:#fff;cursor:pointer;position:relative}.event .mini{font-size:12px;opacity:.9;margin-top:3px}.event .del{position:absolute;top:6px;right:8px;background:rgba(255,255,255,.2);border:0;color:#fff;border-radius:999px;width:22px;height:22px;cursor:pointer}
-.blueBg{background:linear-gradient(135deg,var(--primary2),#2563eb)}.greenBg{background:linear-gradient(135deg,var(--primary),#0f766e)}.amberBg{background:linear-gradient(135deg,var(--warn),#f97316)}.roseBg{background:linear-gradient(135deg,var(--danger),#ec4899)}
+.blueBg{background:linear-gradient(135deg,var(--primary2),#2563eb)}.greenBg{background:linear-gradient(135deg,var(--ok),#14b8a6)}.amberBg{background:linear-gradient(135deg,var(--warn),#f97316)}.roseBg{background:linear-gradient(135deg,var(--danger),#ec4899)}
 .stats{display:grid;gap:10px}.stat{display:flex;justify-content:space-between;gap:10px;padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--card)}.sr{position:absolute;left:-9999px}
 .finance{display:grid;gap:10px}.fitem{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--card)}.money{font-weight:900}.plus{color:var(--primary)}.minus{color:var(--danger)}
-@media(max-width:1200px){.kpis,.main,.bottom,.person-row,.item,.editor,.calendar,.searchbar,.finance{grid-template-columns:1fr 1fr}.person-row{grid-template-columns:1fr}.top{align-items:stretch}.wrap{padding:14px}}
-@media(max-width:720px){.kpis,.main,.bottom,.calendar,.editor,.item,.person-row,.searchbar,.finance{grid-template-columns:1fr}.item{grid-template-columns:1fr}.modal-card{padding:14px}}
+@media(max-width:1200px){.kpis,.main,.bottom,.person-row,.item,.editor,.calendar,.finance{grid-template-columns:1fr 1fr}.person-row{grid-template-columns:1fr}.top{align-items:stretch}.wrap{padding:14px}}
+@media(max-width:720px){.kpis,.main,.bottom,.calendar,.editor,.item,.person-row,.finance{grid-template-columns:1fr}.item{grid-template-columns:1fr}.modal-card{padding:14px}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="top">
-    <div><div class="h1">Sales Cockpit VW</div><div class="sub">Couleurs Volkswagen, planning plus lisible, boutons compacts et bloc financements.</div></div>
-    <div class="row"><button class="btn secondary sm" id="themeBtn">Mode sombre</button><button class="btn secondary sm" id="resetBtn">Réinitialiser</button><button class="btn sm" id="addSellerTop">+ Vendeur</button></div>
-  </div>
+  <section class="hero">
+    <div class="top">
+      <div><div class="h1">Sales Cockpit V10 VW</div><div class="sub">La structure finale de la V10, avec le design Volkswagen bleu/blanc/gris, plus lisible et plus corporate.</div></div>
+      <div class="row"><button class="btn secondary" id="themeBtn">Mode sombre</button><button class="btn secondary" id="resetBtn">Réinitialiser</button><button class="btn" id="addSellerTop">+ Vendeur</button></div>
+    </div>
+  </section>
 
   <div class="grid kpis">
     <div class="card kpi"><div class="label">Objectif équipe</div><div class="value" id="kpiTarget">0</div><div class="foot">ventes / mois</div></div>
@@ -111,10 +112,10 @@ input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);
 <div class="modal" id="financeModal"><div class="modal-card"><div class="modal-head"><h2 style="margin:0">Créer / modifier un financement</h2><button class="x" id="closeFinance">Fermer</button></div><form id="financeForm" class="editor"><input class="full" id="fClient" placeholder="Client"><input id="fType" placeholder="Type" value="LOA"><input id="fAmount" type="number" placeholder="Montant"><input id="fRate" type="number" placeholder="Taux %"><select id="fStatus"><option value="ok">Accepté</option><option value="amber">En attente</option><option value="rose">Refusé</option></select><textarea class="full" id="fNotes" placeholder="Notes"></textarea><div class="full row"><button class="btn sm" type="submit">Enregistrer</button><button class="btn secondary sm" type="button" id="cancelFinance">Annuler</button></div></form></div></div>
 
 <script>
-const LS='salesCockpitVW';
+const LS='salesCockpitV10VW';
 const defaults={theme:'light',selectedFilter:'all',history:[], sellers:[
 {id:1,name:'Martial Gremont',team:'Volkswagen',target:11,done:7,calls:10,rdv:2,status:'ok',notes:'Suivi reprises, financement et relances.'},
-{id:2,name:'Yann Ormes',team:'Audi',target:11,done:6,calls:10,rdv:2,status:'amber',notes:'Phoning, dossiers à signer et relances.'}
+{id:2,name:'Yann Ormes',team:'Volkswagen',target:11,done:6,calls:10,rdv:2,status:'amber',notes:'Phoning, dossiers à signer et relances.'}
 ], events:[
 {id:1,day:'Lundi',time:'09:00',title:'Phoning',detail:'Bloc quotidien équipe',color:'green'},
 {id:2,day:'Mardi',time:'11:00',title:'Rendez-vous client',detail:'Essai + financement',color:'blue'},
@@ -170,8 +171,8 @@ document.getElementById('addFinanceBtn').onclick=()=>{editingFinanceId=null;docu
 document.getElementById('financeForm').addEventListener('submit',e=>{e.preventDefault();const obj={client:fClient.value.trim(),type:fType.value.trim(),amount:+fAmount.value||0,rate:+fRate.value||0,status:fStatus.value,notes:fNotes.value.trim()};if(!obj.client)return;if(editingFinanceId){Object.assign(state.finances.find(x=>x.id===editingFinanceId),obj)}else{state.finances.push({id:uid(),...obj})}editingFinanceId=null;el.financeModal.classList.remove('open');save('Financement ajouté / modifié')})
 document.getElementById('closeFinance').onclick=()=>el.financeModal.classList.remove('open')
 document.getElementById('cancelFinance').onclick=()=>el.financeModal.classList.remove('open')
-document.getElementById('exportBtn').onclick=()=>downloadJSON(state,'sales-cockpit-vw.json')
-document.getElementById('exportCsvBtn').onclick=()=>downloadCSV(state,'sales-cockpit-vw.csv')
+document.getElementById('exportBtn').onclick=()=>downloadJSON(state,'sales-cockpit-v10-vw.json')
+document.getElementById('exportCsvBtn').onclick=()=>downloadCSV(state,'sales-cockpit-v10-vw.csv')
 document.getElementById('importJson').onchange=async e=>{const file=e.target.files[0]; if(!file) return; const txt=await file.text(); try{const obj=JSON.parse(txt); state={...state,...obj}; save('JSON importé')}catch(err){alert('JSON invalide')}}
 document.getElementById('themeBtn').onclick=()=>{state.theme=state.theme==='dark'?'light':'dark';save('Thème modifié')}
 document.getElementById('resetBtn').onclick=()=>{if(confirm('Réinitialiser toutes les données ?')){localStorage.removeItem(LS);location.reload()}}
