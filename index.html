@@ -75,6 +75,27 @@ input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);
 <div class="modal" id="mailModal"><div class="modal-card"><div class="modal-head"><h2 style="margin:0">📧 Envoyer un rappel vendeur</h2><button class="x" id="closeMail">Fermer</button></div><div class="editor"><div class="full small" style="padding:10px;background:color-mix(in oklab,var(--primary) 8%, var(--card));border-radius:12px">Le mail s'ouvre dans ton client mail avec le message prérempli.</div><select class="full" id="mailSeller"></select><input class="full" id="mailEmail" placeholder="Email du vendeur"><input class="full" id="mailSubject" placeholder="Objet du mail" value="Rappel objectifs – Sales Cockpit"><textarea class="full" id="mailBody" style="min-height:160px" placeholder="Corps du message..."></textarea><button class="btn green sm full" id="sendMailBtn" type="button">📧 Ouvrir le mail</button><button class="btn outline sm full" id="cancelMail" type="button">Annuler</button></div></div></div>
 <div class="modal" id="voModal"><div class="modal-card"><div class="modal-head"><h2 style="margin:0">Suivi reprise VO</h2><button class="x" id="closeVoModal">Fermer</button></div><form id="voForm" class="editor"><input class="full" id="vClient" placeholder="Client"><input id="vVehicle" placeholder="Véhicule repris"><input id="vEstimate" type="number" placeholder="Estimation €"><input id="vStatus" placeholder="Statut" value="En cours"><input id="vSeller" placeholder="Vendeur"><textarea class="full" id="vNotes" placeholder="Notes"></textarea><div class="full btns"><button class="btn green sm" type="submit">Enregistrer</button><button class="btn outline sm" type="button" id="cancelVo">Annuler</button></div></form></div></div>
 
+
+<div class="modal" id="notionModal"><div class="modal-card">
+  <div class="modal-head"><h2 style="margin:0">🧩 Intégration Notion</h2><button class="x" id="closeNotion">Fermer</button></div>
+  <div class="editor">
+    <div class="full small" style="padding:10px;background:color-mix(in oklab,var(--primary) 8%, var(--card));border-radius:12px">Cette fenêtre prépare les données à envoyer vers Notion. Le site ouvrira ensuite l'API ou un webhook selon ta configuration.</div>
+    <select class="full" id="notionType">
+      <option value="seller">Vendeur</option>
+      <option value="event">Rendez-vous</option>
+      <option value="vo">Reprise VO</option>
+      <option value="finance">Financement</option>
+    </select>
+    <select class="full" id="notionEntity"></select>
+    <input class="full" id="notionDbId" placeholder="Notion database_id / page_id">
+    <input class="full" id="notionToken" placeholder="Notion integration token (ne pas exposer en prod)">
+    <input class="full" id="notionWebhook" placeholder="Webhook / endpoint backend (recommandé)">
+    <textarea class="full" id="notionPayload" style="min-height:190px" placeholder="Payload JSON"></textarea>
+    <button class="btn green sm full" id="previewNotionBtn" type="button">Prévisualiser le JSON</button>
+    <button class="btn green sm full" id="sendNotionBtn" type="button">Envoyer</button>
+    <button class="btn outline sm full" id="cancelNotion" type="button">Annuler</button>
+  </div>
+</div></div>
 <script>
 const LS='salesCockpitV6';
 const defaults={theme:'light',texts:{title:'Sales Cockpit V6',subtitle:'3 pages : ventes, phoning, suivi VO. Mode admin, mail de rappel, planning plus grand',sellersTitle:'Vendeurs',financeTitle:'Financements',planningTitle:'Agenda hebdomadaire',ctrlTitle:'Contrôle manager – Phoning',voTitle:'Suivi des reprises VO',kpi1label:'Objectif ventes',kpi1foot:'ventes / mois',kpi2label:'Réalisé',kpi2foot:'ventes / mois',kpi3label:'Taux de réussite',kpi3foot:'objectif atteint',kpi4label:'Financements',kpi4foot:'dossiers',pkpi1label:'Appels objectif',pkpi1foot:'appels / semaine',pkpi2label:'RDV planifiés',pkpi2foot:'créneaux',pkpi3label:'Jours de phoning',pkpi3foot:'Lun → Sam',pkpi4label:'Pause déjeuner',pkpi4foot:'pause fixe'},
@@ -137,6 +158,52 @@ window.deleteVo=(id)=>{state.vo=state.vo.filter(x=>x.id!==id);save()}
 addVoBtn.onclick=()=>{editingVoId=null;voForm.reset();voStatus.value='En cours';voModal.classList.add('open')}
 closeVoModal.onclick=cancelVo.onclick=()=>voModal.classList.remove('open')
 voForm.onsubmit=e=>{e.preventDefault();const obj={client:vClient.value.trim(),vehicle:vVehicle.value.trim(),estimate:+vEstimate.value||0,status:vStatus.value,seller:vSeller.value.trim(),notes:vNotes.value.trim()};if(editingVoId){Object.assign(state.vo.find(x=>x.id===editingVoId),obj)}else{state.vo.push({id:uid(),...obj})}voModal.classList.remove('open');save()}
+
+
+// NOTION
+function notionEntitiesByType(type){
+  if(type==='seller') return state.sellers.map(x=>({id:x.id,label:x.name}));
+  if(type==='event') return state.events.map(x=>({id:x.id,label:`${x.day} ${x.time} - ${x.title}`}));
+  if(type==='vo') return state.vo.map(x=>({id:x.id,label:`${x.client} - ${x.vehicle}`}));
+  return state.finances.map(x=>({id:x.id,label:x.client}));
+}
+function notionPayloadFor(type,id){
+  const dbId = notionDbId.value.trim();
+  const byType={seller:state.sellers,event:state.events,vo:state.vo,finance:state.finances}[type]||[];
+  const item=byType.find(x=>x.id===id)||byType[0];
+  let payload={};
+  if(type==='seller'&&item){payload={type:'seller',database_id:dbId,properties:{name:item.name,team:item.team,target:item.target,done:item.done,rdv:item.rdv,status:item.status,notes:item.notes}}}
+  if(type==='event'&&item){payload={type:'event',database_id:dbId,properties:{day:item.day,time:item.time,title:item.title,detail:item.detail,color:item.color}}}
+  if(type==='vo'&&item){payload={type:'vo',database_id:dbId,properties:{client:item.client,vehicle:item.vehicle,estimate:item.estimate,status:item.status,seller:item.seller,notes:item.notes}}}
+  if(type==='finance'&&item){payload={type:'finance',database_id:dbId,properties:{client:item.client,type:item.type,amount:item.amount,rate:item.rate,status:item.status,notes:item.notes}}}
+  return payload;
+}
+function refreshNotionEntities(){
+  const type=notionType.value;
+  notionEntity.innerHTML=notionEntitiesByType(type).map(x=>`<option value="${x.id}">${esc(x.label)}</option>`).join('');
+  updateNotionPreview();
+}
+function updateNotionPreview(){
+  const type=notionType.value;
+  const id=+notionEntity.value||notionEntitiesByType(type)[0]?.id||0;
+  notionPayload.value=JSON.stringify(notionPayloadFor(type,id),null,2);
+}
+openNotionBtn.onclick=()=>{if(!adminMode){alert('Active le mode admin d\'abord.');return;}refreshNotionEntities();notionModal.classList.add('open')};
+closeNotion.onclick=cancelNotion.onclick=()=>notionModal.classList.remove('open');
+notionType.onchange=refreshNotionEntities; notionEntity.onchange=updateNotionPreview; previewNotionBtn.onclick=updateNotionPreview;
+sendNotionBtn.onclick=async()=>{
+  const payload=notionPayload.value.trim();
+  const webhook=notionWebhook.value.trim();
+  const token=notionToken.value.trim();
+  if(webhook){
+    try{await fetch(webhook,{method:'POST',headers:{'Content-Type':'application/json'},body:payload}); alert('Payload envoyé au webhook.'); notionModal.classList.remove('open'); return;}catch(e){alert('Erreur webhook : '+e.message); return;}
+  }
+  if(token){
+    alert('Pour la production, il faut envoyer via un backend sécurisé ou un webhook. Le token Notion ne doit pas être exposé dans le navigateur.');
+    return;
+  }
+  alert('Renseigne un webhook backend ou un endpoint sécurisé pour envoyer vers Notion.');
+};
 
 // MAIL
 function composeMail(id){const s=state.sellers.find(x=>x.id===id);if(!s)return;mailSeller.innerHTML=state.sellers.map(v=>`<option value="${v.id}">${esc(v.name)}</option>`).join('');mailSeller.value=String(id);updateMailBody();mailModal.classList.add('open')}
