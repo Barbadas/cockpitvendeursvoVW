@@ -3,44 +3,42 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Sales Cockpit Final V10</title>
+<title>Sales Cockpit V2.1</title>
 <style>
-:root{--bg:#f6f8fc;--bg2:#eef4ff;--glass:rgba(255,255,255,.72);--glass2:rgba(255,255,255,.9);--text:#152033;--muted:#667085;--line:rgba(21,32,51,.10);--primary:#7c3aed;--primary2:#0ea5e9;--danger:#ef4444;--warn:#f59e0b;--ok:#10b981;--shadow:0 28px 88px rgba(31,41,55,.14);--r:24px;font-family:Inter,system-ui,Arial,sans-serif}
-[data-theme='dark']{--bg:#060b16;--bg2:#09152a;--glass:rgba(15,23,42,.70);--glass2:rgba(15,23,42,.90);--text:#e5e7eb;--muted:#94a3b8;--line:rgba(255,255,255,.10);--primary:#a78bfa;--primary2:#38bdf8;--danger:#fb7185;--warn:#fbbf24;--ok:#34d399;--shadow:0 28px 88px rgba(0,0,0,.34)}
-*{box-sizing:border-box} body{margin:0;color:var(--text);background:radial-gradient(circle at top left, rgba(124,58,237,.12), transparent 28%),radial-gradient(circle at top right, rgba(14,165,233,.12), transparent 28%),linear-gradient(180deg,var(--bg2),var(--bg));min-height:100vh} button,input,select,textarea{font:inherit}
-.wrap{max-width:1760px;margin:0 auto;padding:22px;display:grid;gap:16px}
-.hero{position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(124,58,237,.98),rgba(14,165,233,.92));color:#fff;border-radius:34px;padding:28px;box-shadow:var(--shadow)}
-.hero:before,.hero:after{content:'';position:absolute;border-radius:50%;filter:blur(34px);opacity:.5}.hero:before{width:320px;height:320px;background:rgba(255,255,255,.15);right:-80px;top:-90px}.hero:after{width:220px;height:220px;background:rgba(255,255,255,.12);left:-60px;bottom:-80px}
-.top{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap;position:relative;z-index:1}.h1{font-size:clamp(32px,4vw,58px);font-weight:950;margin:0;letter-spacing:-.04em}.sub{opacity:.92;margin-top:10px;max-width:85ch;font-size:1.02rem}.row{display:flex;gap:10px;flex-wrap:wrap}.btn{border:0;border-radius:999px;padding:12px 16px;background:#fff;color:#111827;font-weight:900;cursor:pointer;box-shadow:0 10px 26px rgba(0,0,0,.16)}.btn.secondary{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.18)}.btn.danger{background:var(--danger);color:#fff}
-.grid{display:grid;gap:14px}.kpis{grid-template-columns:repeat(6,minmax(0,1fr))}.main{grid-template-columns:1.15fr .85fr}.bottom{grid-template-columns:1fr 1fr 1fr}.triple{grid-template-columns:1fr 1fr 1fr}
-.card{background:var(--glass);border:1px solid var(--line);border-radius:var(--r);backdrop-filter:blur(22px) saturate(1.1);box-shadow:var(--shadow);padding:18px}
+:root{--bg:#f4f7fb;--card:#ffffff;--text:#152033;--muted:#667085;--line:#d9e2ec;--primary:#0f766e;--danger:#b42318;--warn:#b45309;--blue:#175cd3;--shadow:0 18px 40px rgba(16,24,40,.08);--r:18px;font-family:Inter,system-ui,Arial,sans-serif}
+[data-theme='dark']{--bg:#0b1220;--card:#111827;--text:#e5e7eb;--muted:#98a2b3;--line:#253041;--primary:#2dd4bf;--danger:#fb7185;--warn:#f59e0b;--blue:#60a5fa;--shadow:0 18px 40px rgba(0,0,0,.28)}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text)} button,input,select,textarea{font:inherit}
+.wrap{max-width:1500px;margin:0 auto;padding:22px;display:grid;gap:16px}
+.top{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap}
+.h1{font-size:clamp(26px,3vw,42px);font-weight:900;margin:0}.sub{color:var(--muted);margin-top:6px}
+.row{display:flex;gap:10px;flex-wrap:wrap}.btn{border:0;border-radius:999px;padding:12px 16px;background:var(--primary);color:#fff;font-weight:800;cursor:pointer}.btn.secondary{background:transparent;color:var(--text);border:1px solid var(--line)}.btn.danger{background:var(--danger)}
+.grid{display:grid;gap:14px}.kpis{grid-template-columns:repeat(6,minmax(0,1fr))}.main{grid-template-columns:1.15fr .85fr}.bottom{grid-template-columns:1fr 1fr 1fr}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:18px}
 .kpi .label,.section-label{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}.kpi .value{font-size:32px;font-weight:900;margin-top:8px}.kpi .foot{color:var(--muted);margin-top:4px;font-size:14px}
-.head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap}.head h2{margin:0;font-size:20px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.pill,.search,.date{border:1px solid var(--line);border-radius:999px;padding:10px 14px;background:var(--glass2);color:var(--text)}
-.list{display:grid;gap:10px}.person-row{display:grid;grid-template-columns:1.05fr .7fr .7fr .9fr auto;gap:10px;align-items:center;padding:14px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,var(--glass2),var(--glass))}
-.person{display:flex;gap:12px;align-items:center}.avatar{width:48px;height:48px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;font-weight:950;box-shadow:0 16px 28px rgba(124,58,237,.18)}
-.small{font-size:12px;color:var(--muted)} .progress{height:10px;background:rgba(148,163,184,.24);border-radius:999px;overflow:hidden}.bar{height:100%;background:linear-gradient(90deg,var(--primary),var(--primary2))}
-.tag{display:inline-flex;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:800}.ok{background:color-mix(in oklab,var(--ok) 18%, var(--glass));color:var(--ok)}.amber{background:color-mix(in oklab,var(--warn) 18%, var(--glass));color:var(--warn)}.blue{background:color-mix(in oklab,var(--primary2) 16%, var(--glass));color:var(--primary2)}.rose{background:color-mix(in oklab,var(--danger) 16%, var(--glass));color:var(--danger)}
-.table{display:grid;gap:10px}.item{display:grid;grid-template-columns:90px 1fr auto;gap:10px;align-items:center;padding:14px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,var(--glass2),var(--glass))}.todo-item{grid-template-columns:auto 1fr auto}.done .txt{text-decoration:line-through;color:var(--muted)}.check{width:20px;height:20px}
+.head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap}.head h2{margin:0;font-size:20px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.pill,.search,.date{border:1px solid var(--line);border-radius:999px;padding:10px 14px;background:transparent;color:var(--text)}
+.list{display:grid;gap:10px}.person-row{display:grid;grid-template-columns:1.15fr .7fr .7fr .9fr auto;gap:10px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:16px;background:color-mix(in oklab,var(--card) 90%, var(--bg))}
+.person{display:flex;gap:12px;align-items:center}.avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:color-mix(in oklab,var(--primary) 16%, var(--card));color:var(--primary);font-weight:900}
+.small{font-size:12px;color:var(--muted)} .progress{height:10px;background:var(--line);border-radius:999px;overflow:hidden}.bar{height:100%;background:var(--primary)}
+.tag{display:inline-flex;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:800}.ok{background:color-mix(in oklab,var(--primary) 16%, var(--card));color:var(--primary)}.amber{background:color-mix(in oklab,var(--warn) 18%, var(--card));color:var(--warn)}.blue{background:color-mix(in oklab,var(--blue) 16%, var(--card));color:var(--blue)}.rose{background:color-mix(in oklab,var(--danger) 16%, var(--card));color:var(--danger)}
+.table{display:grid;gap:10px}.item{display:grid;grid-template-columns:90px 1fr auto;gap:10px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:16px;background:color-mix(in oklab,var(--card) 90%, var(--bg))}.todo-item{grid-template-columns:auto 1fr auto}.done .txt{text-decoration:line-through;color:var(--muted)}.check{width:20px;height:20px}
 .editor{display:grid;gap:10px;grid-template-columns:repeat(2,minmax(0,1fr))}.full{grid-column:1/-1}.searchbar{display:grid;grid-template-columns:1fr auto auto auto;gap:10px;margin-bottom:10px}
-input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:14px;background:var(--glass2);color:var(--text)} textarea{resize:vertical;min-height:110px}
-.modal{position:fixed;inset:0;background:rgba(3,7,18,.64);display:none;align-items:center;justify-content:center;padding:16px}.modal.open{display:flex}.modal-card{width:min(1060px,100%);background:linear-gradient(180deg,var(--glass2),var(--glass));border:1px solid var(--line);border-radius:28px;box-shadow:var(--shadow);padding:18px}
+input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:14px;background:transparent;color:var(--text)} textarea{resize:vertical;min-height:110px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:16px}.modal.open{display:flex}.modal-card{width:min(860px,100%);background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:18px}
 .modal-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}.x{background:transparent;border:1px solid var(--line);color:var(--text);border-radius:12px;padding:10px 12px;cursor:pointer}
-.calendar,.month{display:grid;gap:10px}.calendar{grid-template-columns:repeat(7,minmax(0,1fr))}.month{grid-template-columns:repeat(7,minmax(0,1fr))}.day,.mday{min-height:150px;padding:12px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,var(--glass2),var(--glass));overflow:hidden}.day h4{margin:0 0 8px}.mday{min-height:120px}.mday.active{outline:2px solid var(--primary)}.mday .n{font-weight:950}.mday .c{font-size:12px;color:var(--muted);margin-top:6px}.event{padding:8px 10px;border-radius:12px;margin-top:8px;font-size:13px;color:#fff;cursor:pointer;position:relative;box-shadow:0 10px 20px rgba(0,0,0,.08)}.event .mini{font-size:12px;opacity:.92;margin-top:3px}.event .del{position:absolute;top:6px;right:8px;background:rgba(255,255,255,.18);border:0;color:#fff;border-radius:999px;width:22px;height:22px;cursor:pointer}
-.blueBg{background:linear-gradient(135deg,var(--primary2),#2563eb)}.greenBg{background:linear-gradient(135deg,var(--ok),#14b8a6)}.amberBg{background:linear-gradient(135deg,var(--warn),#f97316)}.roseBg{background:linear-gradient(135deg,var(--danger),#ec4899)}
-.stats{display:grid;gap:10px}.stat{display:flex;justify-content:space-between;gap:10px;padding:12px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(180deg,var(--glass2),var(--glass))}.sr{position:absolute;left:-9999px}
-.chartWrap{display:grid;grid-template-columns:1fr 1fr;gap:14px}.barChart{display:grid;gap:12px}.barRow{display:grid;grid-template-columns:110px 1fr 56px;gap:10px;align-items:center}.barTrack{height:12px;background:rgba(148,163,184,.22);border-radius:999px;overflow:hidden}.barFill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--primary),var(--primary2));transition:width .35s ease}.spark{width:100%;height:120px}.chip{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;border:1px solid var(--line);background:var(--glass2)}
-@media(max-width:1200px){.kpis,.main,.bottom,.triple,.person-row,.item,.editor,.searchbar,.calendar,.month,.chartWrap{grid-template-columns:1fr 1fr}.person-row{grid-template-columns:1fr}.top{align-items:stretch}.wrap{padding:14px}}
-@media(max-width:720px){.kpis,.main,.bottom,.triple,.calendar,.editor,.item,.person-row,.searchbar,.month,.chartWrap{grid-template-columns:1fr}.item{grid-template-columns:1fr}.modal-card{padding:14px}}
+.calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px}.day{min-height:180px;padding:12px;border:1px solid var(--line);border-radius:16px;background:color-mix(in oklab,var(--card) 90%, var(--bg))}.day h4{margin:0 0 8px}.event{padding:8px 10px;border-radius:12px;margin-top:8px;font-size:13px;color:#fff;cursor:pointer;position:relative}.event .mini{font-size:12px;opacity:.9;margin-top:3px}.event .del{position:absolute;top:6px;right:8px;background:rgba(255,255,255,.2);border:0;color:#fff;border-radius:999px;width:22px;height:22px;cursor:pointer}
+.blueBg{background:var(--blue)}.greenBg{background:var(--primary)}.amberBg{background:var(--warn)}.roseBg{background:var(--danger)}
+.stats{display:grid;gap:10px}.stat{display:flex;justify-content:space-between;gap:10px;padding:12px;border:1px solid var(--line);border-radius:14px;background:color-mix(in oklab,var(--card) 90%, var(--bg))}.sr{position:absolute;left:-9999px}
+@media(max-width:1200px){.kpis,.main,.bottom,.person-row,.item,.editor,.calendar,.searchbar{grid-template-columns:1fr 1fr}.person-row{grid-template-columns:1fr}.top{align-items:stretch}.wrap{padding:14px}}
+@media(max-width:720px){.kpis,.main,.bottom,.calendar,.editor,.item,.person-row,.searchbar{grid-template-columns:1fr}.item{grid-template-columns:1fr}.modal-card{padding:14px}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <section class="hero">
-    <div class="top">
-      <div><div class="h1">Sales Cockpit Final V10</div><div class="sub">Version finale plus sobre, plus lisible, plus propre. Sidebar légère, top bar executive, cartes premium, mini graphes et workflow de pilotage complet.</div></div>
-      <div class="row"><button class="btn secondary" id="themeBtn">Mode sombre</button><button class="btn secondary" id="resetBtn">Réinitialiser</button><button class="btn" id="addSellerTop">+ Vendeur</button></div>
-    </div>
-  </section>
+  <div class="top">
+    <div><div class="h1">Sales Cockpit V2.1</div><div class="sub">Design simple, clair et plus proche de la V2, avec les fonctions essentielles du cockpit commercial.</div></div>
+    <div class="row"><button class="btn secondary" id="themeBtn">Mode sombre</button><button class="btn secondary" id="resetBtn">Réinitialiser</button><button class="btn" id="addSellerTop">+ Vendeur</button></div>
+  </div>
 
   <div class="grid kpis">
     <div class="card kpi"><div class="label">Objectif équipe</div><div class="value" id="kpiTarget">0</div><div class="foot">ventes / mois</div></div>
@@ -57,7 +55,7 @@ input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);
       <div class="list" id="sellerList"></div>
     </div>
     <div class="card">
-      <div class="head"><h2>Édition executive</h2><span class="tag ok" id="editLabel">Aucune sélection</span></div>
+      <div class="head"><h2>Édition rapide</h2><span class="tag ok" id="editLabel">Aucune sélection</span></div>
       <form id="sellerForm" class="editor">
         <input class="full" id="sName" placeholder="Nom du vendeur">
         <input id="sTeam" placeholder="Équipe / marque">
@@ -67,18 +65,14 @@ input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);
         <input id="sRdv" type="number" placeholder="RDV / jour">
         <select id="sStatus"><option value="ok">Dans le rythme</option><option value="amber">À surveiller</option><option value="rose">En retard</option></select>
         <textarea class="full" id="sNotes" placeholder="Notes / priorités"></textarea>
-        <div class="full row"><button class="btn" type="submit">Sauvegarder</button><button class="btn secondary" type="button" id="clearSeller">Vider</button><button class="btn secondary" type="button" id="dupSeller">Dupliquer</button></div>
+        <div class="full row"><button class="btn" type="submit">Sauvegarder</button><button class="btn secondary" type="button" id="clearSeller">Vider</button></div>
       </form>
     </div>
   </div>
 
   <div class="grid bottom">
     <div class="card">
-      <div class="head"><h2>Calendrier mensuel</h2><div class="row"><button class="btn secondary" id="addEventBtn">+ Créneau</button></div></div>
-      <div class="month" id="monthCalendar"></div>
-    </div>
-    <div class="card">
-      <div class="head"><h2>Planning semaine</h2><span class="tag blue">Détails</span></div>
+      <div class="head"><h2>Planning semaine</h2><div class="row"><button class="btn secondary" id="addEventBtn">+ Créneau</button></div></div>
       <div class="calendar" id="calendar"></div>
     </div>
     <div class="card">
@@ -87,21 +81,17 @@ input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);
     </div>
   </div>
 
-  <div class="grid triple">
+  <div class="grid bottom">
     <div class="card">
       <div class="head"><h2>Statistiques</h2><span class="tag blue">Temps réel</span></div>
-      <div class="chartWrap">
-        <div class="barChart" id="chartBars"></div>
-        <svg class="spark" viewBox="0 0 300 120" preserveAspectRatio="none" id="sparkSvg"></svg>
-      </div>
-      <div class="stats" id="statsBox" style="margin-top:12px"></div>
+      <div class="stats" id="statsBox"></div>
     </div>
     <div class="card">
       <div class="head"><h2>Historique</h2><button class="btn secondary" id="clearHistoryBtn">Vider</button></div>
       <div class="stats" id="historyList"></div>
     </div>
     <div class="card">
-      <div class="head"><h2>Raccourcis</h2><span class="tag amber">Rapide</span></div>
+      <div class="head"><h2>Raccourcis</h2><span class="tag amber">Pratique</span></div>
       <div class="stats">
         <div class="stat"><div><strong>Ajouter vendeur</strong><div class="small">Créer une nouvelle fiche</div></div><button class="btn secondary" id="newSellerBtn">Créer</button></div>
         <div class="stat"><div><strong>Ajouter créneau</strong><div class="small">Popup calendrier</div></div><button class="btn secondary" id="newEventBtn">Créer</button></div>
@@ -119,7 +109,6 @@ input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);
       <input id="eDay" placeholder="Jour" value="Lundi">
       <input id="eTime" placeholder="Heure" value="09:00">
       <select id="eColor"><option value="green">Vert</option><option value="blue">Bleu</option><option value="amber">Orange</option><option value="rose">Rose</option></select>
-      <input id="eDate" type="date">
       <textarea class="full" id="eDetail" placeholder="Détail"></textarea>
       <div class="full row"><button class="btn" type="submit">Enregistrer</button><button class="btn secondary" type="button" id="cancelEvent">Annuler</button></div>
     </form>
@@ -127,76 +116,65 @@ input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);
 </div>
 
 <script>
-const LS='salesCockpitV10';
-const defaults={theme:'light',selectedFilter:'all',history:[], month:0, sellers:[
+const LS='salesCockpitV2_1';
+const defaults={theme:'light',selectedFilter:'all',history:[], sellers:[
 {id:1,name:'Martial Gremont',team:'Volkswagen',target:11,done:7,calls:10,rdv:2,status:'ok',notes:'Suivi reprises, financement et relances.'},
 {id:2,name:'Yann Ormes',team:'Audi',target:11,done:6,calls:10,rdv:2,status:'amber',notes:'Phoning, dossiers à signer et relances.'}
 ], events:[
-{id:1,day:'Lundi',time:'09:00',title:'Phoning',detail:'Bloc quotidien équipe',color:'green',date:new Date().toISOString().slice(0,10)},
-{id:2,day:'Mardi',time:'11:00',title:'Rendez-vous client',detail:'Essai + financement',color:'blue',date:new Date().toISOString().slice(0,10)},
-{id:3,day:'Vendredi',time:'14:30',title:'Relance dossiers',detail:'VO et financement',color:'amber',date:new Date().toISOString().slice(0,10)}
+{id:1,day:'Lundi',time:'09:00',title:'Phoning',detail:'Bloc quotidien équipe',color:'green'},
+{id:2,day:'Mardi',time:'11:00',title:'Rendez-vous client',detail:'Essai + financement',color:'blue'},
+{id:3,day:'Vendredi',time:'14:30',title:'Relance dossiers',detail:'VO et financement',color:'amber'}
 ], tasks:[
 {id:1,text:'Valider le planning showroom',done:true},
 {id:2,text:'Contrôler les leads non traités',done:false}
 ]};
-let state=load(); let editingSellerId=null; let editingEventId=null; let currentEventDate=new Date().toISOString().slice(0,10);
-const el={sellerList:document.getElementById('sellerList'),calendar:document.getElementById('calendar'),monthCalendar:document.getElementById('monthCalendar'),taskList:document.getElementById('taskList'),sellerFilter:document.getElementById('sellerFilter'),eventModal:document.getElementById('eventModal'),statsBox:document.getElementById('statsBox'),historyList:document.getElementById('historyList'),chartBars:document.getElementById('chartBars'),sparkSvg:document.getElementById('sparkSvg')};
+let state=load(); let editingSellerId=null; let editingEventId=null;
+const el={sellerList:document.getElementById('sellerList'),calendar:document.getElementById('calendar'),taskList:document.getElementById('taskList'),sellerFilter:document.getElementById('sellerFilter'),eventModal:document.getElementById('eventModal'),statsBox:document.getElementById('statsBox'),historyList:document.getElementById('historyList')};
 function load(){try{const s=localStorage.getItem(LS);return s?JSON.parse(s):structuredClone(defaults)}catch(e){return structuredClone(defaults)}}
 function save(msg='Sauvegarde'){localStorage.setItem(LS,JSON.stringify(state));pushHistory(msg);render()}
-function pushHistory(msg){state.history=[{id:uid(),time:new Date().toLocaleString('fr-FR'),msg},...state.history].slice(0,12)}
+function pushHistory(msg){state.history=[{id:uid(),time:new Date().toLocaleString('fr-FR'),msg},...state.history].slice(0,10)}
 function uid(){return Date.now()+Math.floor(Math.random()*1000)}
 function esc(v){return String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;')}
 function initials(n){return n.split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0].toUpperCase()).join('')}
 function colorClass(c){return c==='blue'?'blueBg':c==='amber'?'amberBg':c==='rose'?'roseBg':'greenBg'}
-function calc(){const target=state.sellers.reduce((a,s)=>a+(+s.target||0),0);const done=state.sellers.reduce((a,s)=>a+(+s.done||0),0);const rdv=state.sellers.reduce((a,s)=>a+(+s.rdv||0),0);document.getElementById('kpiTarget').textContent=target;document.getElementById('kpiDone').textContent=done;document.getElementById('kpiRate').textContent=target?Math.round(done/target*100)+'%':'0%';document.getElementById('kpiRdv').textContent=rdv;document.getElementById('kpiTodo').textContent=state.tasks.length;document.getElementById('kpiSellers').textContent=state.sellers.length;const bars=state.sellers.map(s=>({name:s.name,val:+s.done||0,max:+s.target||0}));el.chartBars.innerHTML=bars.map(b=>{const pct=Math.min(100,Math.round((b.val/(b.max||1))*100));return `<div class="barRow"><div><strong>${esc(b.name)}</strong></div><div class="barTrack"><div class="barFill" style="width:${pct}%"></div></div><div style="text-align:right;font-weight:900">${pct}%</div></div>`}).join('');el.statsBox.innerHTML=[['Ventes / vendeur',state.sellers.length?Math.round(done/state.sellers.length):0],['Appels / vendeur',state.sellers.length?Math.round(state.sellers.reduce((a,s)=>a+(+s.calls||0),0)/state.sellers.length):0],['RDV / vendeur',state.sellers.length?Math.round(rdv/state.sellers.length):0],['Créneaux semaine',state.events.length],['Tâches ouvertes',state.tasks.filter(t=>!t.done).length],['Mois actif',new Date().toLocaleString('fr-FR',{month:'long'})]].map(([k,v])=>`<div class="stat"><div><strong>${k}</strong><div class="small">Indicateur calculé automatiquement</div></div><div><strong>${v}</strong></div></div>`).join('');el.historyList.innerHTML=(state.history||[]).map(h=>`<div class="stat"><div><strong>${esc(h.msg)}</strong><div class="small">${esc(h.time)}</div></div></div>`).join('')||'<div class="small">Aucun historique</div>';drawSpark()}
-function drawSpark(){const values=state.sellers.map(s=>+s.done||0);const max=Math.max(...values,1);const points=values.map((v,i)=>`${30+i*110},${100-(v/max)*78}`).join(' ');el.sparkSvg.innerHTML=`<defs><linearGradient id="g" x1="0" x2="1"><stop offset="0%" stop-color="var(--primary)"/><stop offset="100%" stop-color="var(--primary2)"/></linearGradient></defs><polyline fill="none" stroke="url(#g)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" points="${points}"/><circle cx="30" cy="${100-(values[0]||0)/max*78}" r="5" fill="var(--primary)"/><circle cx="140" cy="${100-(values[1]||0)/max*78}" r="5" fill="var(--primary2)"/>`}
+function calc(){const target=state.sellers.reduce((a,s)=>a+(+s.target||0),0);const done=state.sellers.reduce((a,s)=>a+(+s.done||0),0);const rdv=state.sellers.reduce((a,s)=>a+(+s.rdv||0),0);document.getElementById('kpiTarget').textContent=target;document.getElementById('kpiDone').textContent=done;document.getElementById('kpiRate').textContent=target?Math.round(done/target*100)+'%':'0%';document.getElementById('kpiRdv').textContent=rdv;document.getElementById('kpiTodo').textContent=state.tasks.length;document.getElementById('kpiSellers').textContent=state.sellers.length;el.statsBox.innerHTML=[['Ventes / vendeur',state.sellers.length?Math.round(done/state.sellers.length):0],['Appels / vendeur',state.sellers.length?Math.round(state.sellers.reduce((a,s)=>a+(+s.calls||0),0)/state.sellers.length):0],['RDV / vendeur',state.sellers.length?Math.round(rdv/state.sellers.length):0],['Créneaux semaine',state.events.length],['Tâches ouvertes',state.tasks.filter(t=>!t.done).length]].map(([k,v])=>`<div class="stat"><div><strong>${k}</strong><div class="small">Indicateur calculé automatiquement</div></div><div><strong>${v}</strong></div></div>`).join('');el.historyList.innerHTML=(state.history||[]).map(h=>`<div class="stat"><div><strong>${esc(h.msg)}</strong><div class="small">${esc(h.time)}</div></div></div>`).join('')||'<div class="small">Aucun historique</div>'}
 function renderFilter(){el.sellerFilter.innerHTML='<option value="all">Tous</option>'+state.sellers.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');el.sellerFilter.value=state.selectedFilter||'all'}
-function monthDays(){const now=new Date(); const y=now.getFullYear(); const m=state.month||now.getMonth(); const first=new Date(y,m,1); const start=(first.getDay()+6)%7; const days=new Date(y,m+1,0).getDate(); let cells=[]; for(let i=0;i<start;i++)cells.push(''); for(let d=1;d<=days;d++)cells.push(String(d)); return {y,m,cells}}
-function renderMonth(){const {y,m,cells}=monthDays(); const monthName=new Date(y,m,1).toLocaleString('fr-FR',{month:'long',year:'numeric'}); el.monthCalendar.innerHTML=`<div class="full" style="display:flex;justify-content:space-between;align-items:center;grid-column:1/-1"><strong>${monthName}</strong><div class="row"><button class="btn secondary" onclick="shiftMonth(-1)">◀</button><button class="btn secondary" onclick="shiftMonth(1)">▶</button></div></div>`+['L','M','M','J','V','S','D'].map(d=>`<div class="small" style="text-align:center;font-weight:800">${d}</div>`).join('')+cells.map(c=>{if(!c)return '<div></div>'; const dateStr=`${y}-${String(m+1).padStart(2,'0')}-${String(c).padStart(2,'0')}`; const count=state.events.filter(e=>e.date===dateStr).length; const active=dateStr===currentEventDate?'active':''; return `<div class="mday ${active}" onclick="setCurrentDate('${dateStr}')"><div class="n">${c}</div><div class="c">${count} créneau(x)</div></div>`}).join('')}
-function renderSellers(){const q=(document.getElementById('sellerSearch').value||'').toLowerCase();const f=el.sellerFilter.value||'all';const arr=state.sellers.filter(s=>(f==='all'||String(s.id)===f)&&(!q||`${s.name} ${s.team} ${s.notes}`.toLowerCase().includes(q)));el.sellerList.innerHTML=arr.map(s=>{const pct=Math.min(100,Math.round(((+s.done||0)/((+s.target||1)))*100));const status=s.status||'ok';const label=status==='ok'?'Dans le rythme':status==='amber'?'À surveiller':'En retard';return `<div class="person-row" draggable="true" ondragstart="dragSeller(event,${s.id})"><div class="person"><div class="avatar">${initials(s.name)}</div><div><div><strong>${esc(s.name)}</strong></div><div class="small">${esc(s.team)}</div><div class="small">${esc(s.notes)}</div></div></div><div><div class="small">Objectif</div><strong contenteditable="true" onblur="updateSeller(${s.id},'target',this.textContent)">${+s.target||0}</strong></div><div><div class="small">Réalisé</div><strong contenteditable="true" onblur="updateSeller(${s.id},'done',this.textContent)">${+s.done||0}</strong></div><div><div class="small">Progression</div><div class="progress"><div class="bar" style="width:${pct}%"></div></div></div><div class="row"><span class="tag ${status}">${label}</span><button class="btn secondary" onclick="loadSeller(${s.id})">Modifier</button><button class="btn secondary" onclick="duplicateSeller(${s.id})">Dupliquer</button><button class="btn danger" onclick="deleteSeller(${s.id})">Supprimer</button></div></div>`}).join('')||'<div class="small">Aucun résultat</div>'}
-function renderCalendar(){const days=['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];const filtered=state.events.filter(e=>!document.getElementById('fromDate').value||e.date>=document.getElementById('fromDate').value).filter(e=>!document.getElementById('toDate').value||e.date<=document.getElementById('toDate').value);el.calendar.innerHTML=days.map(d=>`<div class="day" ondragover="allowDrop(event)" ondrop="dropEvent(event,'${d}')"><h4>${d}</h4>${filtered.filter(e=>e.day===d).sort((a,b)=>a.time.localeCompare(b.time)).map(e=>`<div class="event ${colorClass(e.color)}" draggable="true" ondragstart="dragEvent(event,${e.id})" onclick="editEvent(${e.id})"><button class="del" title="Supprimer" onclick="event.stopPropagation();deleteEvent(${e.id})">×</button><strong>${esc(e.time)}</strong> ${esc(e.title)}<div class="mini">${esc(e.detail)}${e.date?` • ${esc(e.date)}`:''}</div></div>`).join('')||'<div class="small">Aucun créneau</div>'}</div>`).join('')}
+function renderSellers(){const q=(document.getElementById('sellerSearch').value||'').toLowerCase();const f=el.sellerFilter.value||'all';const arr=state.sellers.filter(s=>(f==='all'||String(s.id)===f)&&(!q||`${s.name} ${s.team} ${s.notes}`.toLowerCase().includes(q)));el.sellerList.innerHTML=arr.map(s=>{const pct=Math.min(100,Math.round(((+s.done||0)/((+s.target||1)))*100));const status=s.status||'ok';const label=status==='ok'?'Dans le rythme':status==='amber'?'À surveiller':'En retard';return `<div class="person-row"><div class="person"><div class="avatar">${initials(s.name)}</div><div><div><strong>${esc(s.name)}</strong></div><div class="small">${esc(s.team)}</div><div class="small">${esc(s.notes)}</div></div></div><div><div class="small">Objectif</div><strong contenteditable="true" onblur="updateSeller(${s.id},'target',this.textContent)">${+s.target||0}</strong></div><div><div class="small">Réalisé</div><strong contenteditable="true" onblur="updateSeller(${s.id},'done',this.textContent)">${+s.done||0}</strong></div><div><div class="small">Progression</div><div class="progress"><div class="bar" style="width:${pct}%"></div></div></div><div class="row"><span class="tag ${status}">${label}</span><button class="btn secondary" onclick="loadSeller(${s.id})">Modifier</button><button class="btn danger" onclick="deleteSeller(${s.id})">Supprimer</button></div></div>`}).join('')||'<div class="small">Aucun résultat</div>'}
+function renderCalendar(){const days=['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];el.calendar.innerHTML=days.map(d=>`<div class="day"><h4>${d}</h4>${state.events.filter(e=>e.day===d).sort((a,b)=>a.time.localeCompare(b.time)).map(e=>`<div class="event ${colorClass(e.color)}" onclick="editEvent(${e.id})"><button class="del" title="Supprimer" onclick="event.stopPropagation();deleteEvent(${e.id})">×</button><strong>${esc(e.time)}</strong> ${esc(e.title)}<div class="mini">${esc(e.detail)}</div></div>`).join('')||'<div class="small">Aucun créneau</div>'}</div>`).join('')}
 function renderTasks(){el.taskList.innerHTML=state.tasks.map(t=>`<div class="item todo-item ${t.done?'done':''}"><input class="check" type="checkbox" ${t.done?'checked':''} onchange="toggleTask(${t.id},this.checked)"><input class="txt" value="${esc(t.text)}" onblur="updateTask(${t.id},this.value)"><button class="btn danger" onclick="deleteTask(${t.id})">Supprimer</button></div>`).join('')}
-function render(){document.documentElement.dataset.theme=state.theme||'light';document.getElementById('themeBtn').textContent=state.theme==='dark'?'Mode clair':'Mode sombre';renderFilter();calc();renderSellers();renderCalendar();renderMonth();renderTasks();document.getElementById('editLabel').textContent=editingSellerId?'Vendeur en édition':'Aucune sélection'}
-window.setCurrentDate=(d)=>{currentEventDate=d; document.getElementById('eDay').value=new Date(d).toLocaleString('fr-FR',{weekday:'long'}).replace(/^[a-z]/,x=>x.toUpperCase()); document.getElementById('eDate').value=d; save('Date sélectionnée')}
-window.shiftMonth=(dir)=>{state.month=(state.month||new Date().getMonth())+dir; save('Mois changé')}
+function render(){document.documentElement.dataset.theme=state.theme||'light';document.getElementById('themeBtn').textContent=state.theme==='dark'?'Mode clair':'Mode sombre';renderFilter();calc();renderSellers();renderCalendar();renderTasks();document.getElementById('editLabel').textContent=editingSellerId?'Vendeur en édition':'Aucune sélection'}
 window.updateSeller=(id,key,val)=>{const s=state.sellers.find(x=>x.id===id);if(!s)return;s[key]=['target','done','calls','rdv'].includes(key)?+val||0:val;save('Vendeur modifié')}
 window.loadSeller=(id)=>{const s=state.sellers.find(x=>x.id===id);if(!s)return;editingSellerId=id;document.getElementById('sName').value=s.name;document.getElementById('sTeam').value=s.team;document.getElementById('sTarget').value=s.target;document.getElementById('sDone').value=s.done;document.getElementById('sCalls').value=s.calls;document.getElementById('sRdv').value=s.rdv;document.getElementById('sStatus').value=s.status||'ok';document.getElementById('sNotes').value=s.notes;render()}
-window.duplicateSeller=(id)=>{const s=state.sellers.find(x=>x.id===id);if(!s)return;state.sellers.push({...structuredClone(s),id:uid(),name:s.name+' copie'});save('Vendeur dupliqué')}
 window.deleteSeller=(id)=>{state.sellers=state.sellers.filter(x=>x.id!==id);if(editingSellerId===id)clearSeller();save('Vendeur supprimé')}
 window.toggleTask=(id,done)=>{const t=state.tasks.find(x=>x.id===id);if(t){t.done=done;save('Action modifiée')}}
 window.updateTask=(id,text)=>{const t=state.tasks.find(x=>x.id===id);if(t){t.text=text;save('Action modifiée')}}
 window.deleteTask=(id)=>{state.tasks=state.tasks.filter(x=>x.id!==id);save('Action supprimée')}
-window.editEvent=(id)=>{const e=state.events.find(x=>x.id===id);if(!e)return;editingEventId=id;eTitle.value=e.title;eDay.value=e.day;eTime.value=e.time;eColor.value=e.color;eDetail.value=e.detail;eDate.value=e.date||currentEventDate;currentEventDate=e.date||currentEventDate;el.eventModal.classList.add('open')}
+window.editEvent=(id)=>{const e=state.events.find(x=>x.id===id);if(!e)return;editingEventId=id;eTitle.value=e.title;eDay.value=e.day;eTime.value=e.time;eColor.value=e.color;eDetail.value=e.detail;el.eventModal.classList.add('open')}
 window.deleteEvent=(id)=>{state.events=state.events.filter(x=>x.id!==id);save('Créneau supprimé')}
-window.dragSeller=(ev,id)=>{ev.dataTransfer.setData('sellerId',id)}
-window.dragEvent=(ev,id)=>{ev.dataTransfer.setData('eventId',id)}
-window.allowDrop=(ev)=>ev.preventDefault()
-window.dropEvent=(ev,day)=>{ev.preventDefault();const eventId=ev.dataTransfer.getData('eventId');if(eventId){const e=state.events.find(x=>x.id==eventId);if(e){e.day=day;e.date=currentEventDate;save('Créneau déplacé')}}}
 function clearSeller(){editingSellerId=null;document.getElementById('sellerForm').reset();render()}
 document.getElementById('sellerForm').addEventListener('submit',e=>{e.preventDefault();const obj={name:sName.value.trim(),team:sTeam.value.trim(),target:+sTarget.value||0,done:+sDone.value||0,calls:+sCalls.value||0,rdv:+sRdv.value||0,status:sStatus.value,notes:sNotes.value.trim()};if(!obj.name)return;if(editingSellerId){Object.assign(state.sellers.find(x=>x.id===editingSellerId),obj)}else{state.sellers.push({id:uid(),...obj})}editingSellerId=null;save('Vendeur ajouté / modifié');e.target.reset()})
 document.getElementById('addSellerTop').onclick=clearSeller
 document.getElementById('newSellerBtn').onclick=clearSeller
 document.getElementById('clearSeller').onclick=clearSeller
-document.getElementById('dupSeller').onclick=()=>editingSellerId&&duplicateSeller(editingSellerId)
 document.getElementById('sellerFilter').onchange=e=>{state.selectedFilter=e.target.value;save('Filtre vendeur modifié')}
 document.getElementById('sellerSearch').oninput=renderSellers
 document.getElementById('fromDate').onchange=renderCalendar
 document.getElementById('toDate').onchange=renderCalendar
-document.getElementById('addEventBtn').onclick=()=>{editingEventId=null;document.getElementById('eventForm').reset();eDay.value='Lundi';eTime.value='09:00';eColor.value='green';eDetail.value='';eDate.value=currentEventDate;el.eventModal.classList.add('open')}
+document.getElementById('addEventBtn').onclick=()=>{editingEventId=null;document.getElementById('eventForm').reset();eDay.value='Lundi';eTime.value='09:00';eColor.value='green';eDetail.value='';el.eventModal.classList.add('open')}
 document.getElementById('newEventBtn').onclick=document.getElementById('addEventBtn').onclick
-document.getElementById('eventForm').addEventListener('submit',e=>{e.preventDefault();const obj={title:eTitle.value.trim(),day:eDay.value.trim(),time:eTime.value.trim(),color:eColor.value,detail:eDetail.value.trim(),date:eDate.value||currentEventDate};if(!obj.title)return;if(editingEventId){Object.assign(state.events.find(x=>x.id===editingEventId),obj)}else{state.events.push({id:uid(),...obj})}el.eventModal.classList.remove('open');editingEventId=null;save('Créneau ajouté / modifié')})
+document.getElementById('eventForm').addEventListener('submit',e=>{e.preventDefault();const obj={title:eTitle.value.trim(),day:eDay.value.trim(),time:eTime.value.trim(),color:eColor.value,detail:eDetail.value.trim()};if(!obj.title)return;if(editingEventId){Object.assign(state.events.find(x=>x.id===editingEventId),obj)}else{state.events.push({id:uid(),...obj})}el.eventModal.classList.remove('open');editingEventId=null;save('Créneau ajouté / modifié')})
 document.getElementById('closeModal').onclick=()=>el.eventModal.classList.remove('open')
 document.getElementById('cancelEvent').onclick=()=>el.eventModal.classList.remove('open')
 document.getElementById('addTaskBtn').onclick=()=>{state.tasks.push({id:uid(),text:'Nouvelle action',done:false});save('Action ajoutée')}
-document.getElementById('exportBtn').onclick=()=>downloadJSON(state,'sales-cockpit-v10.json')
-document.getElementById('exportCsvBtn').onclick=()=>downloadCSV(state,'sales-cockpit-v10.csv')
+document.getElementById('exportBtn').onclick=()=>downloadJSON(state,'sales-cockpit-v2.1.json')
+document.getElementById('exportCsvBtn').onclick=()=>downloadCSV(state,'sales-cockpit-v2.1.csv')
 document.getElementById('importJson').onchange=async e=>{const file=e.target.files[0]; if(!file) return; const txt=await file.text(); try{const obj=JSON.parse(txt); state={...state,...obj}; save('JSON importé')}catch(err){alert('JSON invalide')}}
 document.getElementById('themeBtn').onclick=()=>{state.theme=state.theme==='dark'?'light':'dark';save('Thème modifié')}
 document.getElementById('resetBtn').onclick=()=>{if(confirm('Réinitialiser toutes les données ?')){localStorage.removeItem(LS);location.reload()}}
 document.getElementById('clearFilterBtn').onclick=()=>{state.selectedFilter='all';save('Filtre réinitialisé')}
 document.getElementById('clearHistoryBtn').onclick=()=>{state.history=[];save('Historique vidé')}
 function downloadJSON(obj,name){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(obj,null,2)],{type:'application/json'}));a.download=name;a.click()}
-function downloadCSV(s,name){const rows=[['type','id','name','team','target','done','calls','rdv','status','notes','day','time','title','detail','color','date'],...s.sellers.map(x=>['seller',x.id,x.name,x.team,x.target,x.done,x.calls,x.rdv,x.status,x.notes,'','','','','','']),...s.events.map(x=>['event',x.id,'','','','','','','', '',x.day,x.time,x.title,x.detail,x.color,x.date]),...s.tasks.map(x=>['task',x.id,x.text,x.done,'','','','','','','','','','','',''])];const csv=rows.map(r=>r.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=name;a.click()}
+function downloadCSV(s,name){const rows=[['type','id','name','team','target','done','calls','rdv','status','notes','day','time','title','detail','color'],...s.sellers.map(x=>['seller',x.id,x.name,x.team,x.target,x.done,x.calls,x.rdv,x.status,x.notes,'','','','','']),...s.events.map(x=>['event',x.id,'','','','','','','',x.day,x.time,x.title,x.detail,x.color]),...s.tasks.map(x=>['task',x.id,x.text,x.done,'','','','','','','','','',''])];const csv=rows.map(r=>r.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=name;a.click()}
 render();
 </script>
 </body>
