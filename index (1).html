@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutoCRM — Gestion Commerciale Automobile</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Syne:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c10;
+    --surface: #111318;
+    --surface2: #181c22;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #f0f2f5;
+    --text2: #8a909c;
+    --text3: #555c6a;
+    --accent: #d4a843;
+    --accent2: #e8c26a;
+    --red: #e05656;
+    --green: #4caf82;
+    --blue: #4a8fcc;
+    --purple: #8b6fd4;
+    --font: 'DM Sans', sans-serif;
+    --display: 'Syne', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; display: flex; }
+
+  /* Sidebar */
+  .sidebar {
+    width: 240px; min-height: 100vh; background: var(--surface);
+    border-right: 1px solid var(--border); display: flex; flex-direction: column;
+    position: fixed; left: 0; top: 0; bottom: 0; z-index: 100;
+  }
+  .logo { padding: 24px 20px 20px; border-bottom: 1px solid var(--border); }
+  .logo-mark { font-family: var(--display); font-size: 20px; font-weight: 700; color: var(--accent); letter-spacing: 0.03em; }
+  .logo-sub { font-size: 11px; color: var(--text3); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 2px; }
+
+  .nav { padding: 16px 12px; flex: 1; }
+  .nav-section { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; padding: 8px 8px 6px; margin-top: 8px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px; padding: 9px 10px;
+    border-radius: 8px; cursor: pointer; font-size: 13.5px; color: var(--text2);
+    transition: all 0.15s; margin-bottom: 2px; border: 1px solid transparent;
+  }
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active { background: rgba(212,168,67,0.12); color: var(--accent); border-color: rgba(212,168,67,0.2); }
+  .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+  .nav-badge { margin-left: auto; background: var(--accent); color: #000; font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 20px; }
+
+  .sidebar-footer { padding: 16px; border-top: 1px solid var(--border); }
+  .user-card { display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 8px; cursor: pointer; }
+  .user-card:hover { background: var(--surface2); }
+  .avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #d4a843, #e8c26a); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: #000; }
+  .user-name { font-size: 13px; font-weight: 500; }
+  .user-role { font-size: 11px; color: var(--text3); }
+
+  /* Main */
+  .main { margin-left: 240px; flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+
+  /* Topbar */
+  .topbar {
+    padding: 16px 28px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 16px; background: var(--bg);
+    position: sticky; top: 0; z-index: 50;
+  }
+  .page-title { font-family: var(--display); font-size: 18px; font-weight: 700; flex: 1; }
+  .search-bar {
+    display: flex; align-items: center; gap: 8px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 8px; padding: 7px 12px; width: 240px;
+  }
+  .search-bar input { background: none; border: none; outline: none; color: var(--text); font-size: 13px; width: 100%; font-family: var(--font); }
+  .search-bar input::placeholder { color: var(--text3); }
+  .btn {
+    display: flex; align-items: center; gap: 6px; padding: 8px 14px;
+    border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer;
+    border: none; transition: all 0.15s; font-family: var(--font);
+  }
+  .btn-primary { background: var(--accent); color: #000; }
+  .btn-primary:hover { background: var(--accent2); }
+  .btn-ghost { background: var(--surface); border: 1px solid var(--border); color: var(--text2); }
+  .btn-ghost:hover { border-color: var(--border2); color: var(--text); }
+
+  /* Content */
+  .content { padding: 28px; flex: 1; }
+
+  /* Pages */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* KPI Cards */
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+  .kpi-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px;
+  }
+  .kpi-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .kpi-value { font-family: var(--display); font-size: 28px; font-weight: 700; margin-bottom: 6px; }
+  .kpi-trend { font-size: 12px; display: flex; align-items: center; gap: 4px; }
+  .trend-up { color: var(--green); }
+  .trend-down { color: var(--red); }
+
+  /* Charts row */
+  .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 28px; }
+  .chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .chart-title { font-size: 13px; font-weight: 500; }
+  .chart-sub { font-size: 11px; color: var(--text3); }
+
+  /* Bar chart */
+  .bar-chart { display: flex; align-items: flex-end; gap: 8px; height: 120px; }
+  .bar-group { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end; }
+  .bar { width: 100%; border-radius: 4px 4px 0 0; transition: opacity 0.2s; cursor: pointer; }
+  .bar:hover { opacity: 0.8; }
+  .bar-label { font-size: 10px; color: var(--text3); }
+
+  /* Pipeline */
+  .pipeline-stages { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 4px; }
+  .stage-col { flex: 0 0 200px; }
+  .stage-header { padding: 10px 12px; border-radius: 8px 8px 0 0; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; display: flex; justify-content: space-between; }
+  .stage-body { background: var(--surface2); border-radius: 0 0 8px 8px; padding: 8px; min-height: 300px; display: flex; flex-direction: column; gap: 8px; }
+  .deal-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 12px; cursor: pointer; transition: all 0.15s;
+  }
+  .deal-card:hover { border-color: var(--border2); }
+  .deal-name { font-size: 12.5px; font-weight: 500; margin-bottom: 4px; }
+  .deal-car { font-size: 11px; color: var(--text3); margin-bottom: 8px; }
+  .deal-value { font-size: 13px; font-weight: 600; color: var(--accent); }
+  .deal-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+  .deal-days { font-size: 10px; color: var(--text3); }
+  .deal-avatar { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 600; }
+
+  /* Table */
+  .table-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .table-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  table { width: 100%; border-collapse: collapse; }
+  th { padding: 10px 16px; text-align: left; font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.07em; font-weight: 500; border-bottom: 1px solid var(--border); }
+  td { padding: 12px 16px; font-size: 13px; border-bottom: 1px solid var(--border); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  /* Badge */
+  .badge { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+  .badge-green { background: rgba(76,175,130,0.15); color: var(--green); }
+  .badge-red { background: rgba(224,86,86,0.15); color: var(--red); }
+  .badge-amber { background: rgba(212,168,67,0.15); color: var(--accent); }
+  .badge-blue { background: rgba(74,143,204,0.15); color: var(--blue); }
+  .badge-purple { background: rgba(139,111,212,0.15); color: var(--purple); }
+  .badge-gray { background: rgba(255,255,255,0.07); color: var(--text2); }
+
+  /* Stock grid */
+  .stock-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+  .stock-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    overflow: hidden; cursor: pointer; transition: all 0.15s;
+  }
+  .stock-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+  .stock-img { height: 140px; display: flex; align-items: center; justify-content: center; font-size: 56px; }
+  .stock-body { padding: 14px; }
+  .stock-model { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .stock-info { font-size: 11px; color: var(--text3); margin-bottom: 10px; }
+  .stock-price { font-family: var(--display); font-size: 18px; font-weight: 700; color: var(--accent); }
+  .stock-mileage { font-size: 11px; color: var(--text3); }
+  .stock-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 10px; }
+
+  /* Contact detail */
+  .detail-layout { display: grid; grid-template-columns: 340px 1fr; gap: 20px; }
+  .detail-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+  .contact-avatar-lg { width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 600; margin-bottom: 16px; }
+  .contact-name-lg { font-family: var(--display); font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+  .contact-role { font-size: 13px; color: var(--text3); margin-bottom: 20px; }
+  .detail-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .detail-row:last-child { border-bottom: none; }
+  .detail-label { color: var(--text3); }
+  .detail-val { font-weight: 500; }
+  .timeline { display: flex; flex-direction: column; gap: 1px; }
+  .timeline-item { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+  .timeline-item:last-child { border-bottom: none; }
+  .timeline-dot { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 14px; }
+  .timeline-content { flex: 1; }
+  .timeline-title { font-size: 13px; font-weight: 500; margin-bottom: 3px; }
+  .timeline-meta { font-size: 11px; color: var(--text3); }
+
+  /* Modal */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; align-items: center; justify-content: center; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--surface); border: 1px solid var(--border2); border-radius: 16px; padding: 28px; width: 500px; max-width: 95vw; }
+  .modal-title { font-family: var(--display); font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+  .form-group label { font-size: 12px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.07em; }
+  .form-group input, .form-group select, .form-group textarea {
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+    color: var(--text); font-family: var(--font); font-size: 13px; padding: 9px 12px; outline: none;
+    transition: border-color 0.15s;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--accent); }
+  .form-group select option { background: var(--surface); }
+  .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px; }
+
+  /* Donut chart SVG */
+  .donut-wrap { display: flex; align-items: center; gap: 20px; }
+  .donut-legend { display: flex; flex-direction: column; gap: 8px; }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  /* Objectives */
+  .obj-list { display: flex; flex-direction: column; gap: 14px; }
+  .obj-item { background: var(--surface2); border-radius: 10px; padding: 14px 16px; }
+  .obj-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .obj-name { font-size: 13px; font-weight: 500; }
+  .obj-pct { font-size: 13px; color: var(--accent); font-weight: 600; }
+  .progress-bar { height: 6px; background: var(--surface); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+
+  /* Notification dot */
+  .notif { position: relative; }
+  .notif::after { content: ''; width: 7px; height: 7px; background: var(--accent); border-radius: 50%; position: absolute; top: -2px; right: -2px; }
+
+  /* Responsive hint (tabs only) */
+  .tab-filters { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .tab-filter { padding: 6px 14px; border-radius: 6px; font-size: 12px; cursor: pointer; border: 1px solid var(--border); color: var(--text2); background: none; font-family: var(--font); transition: all 0.15s; }
+  .tab-filter.active { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 600; }
+  .tab-filter:hover:not(.active) { border-color: var(--border2); color: var(--text); }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-mark">⬡ AutoCRM</div>
+    <div class="logo-sub">Gestion Commerciale</div>
+  </div>
+  <nav class="nav">
+    <div class="nav-section">Principal</div>
+    <div class="nav-item active" onclick="navigate('dashboard')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Tableau de bord
+    </div>
+    <div class="nav-item" onclick="navigate('pipeline')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12H2M22 12l-4-4M22 12l-4 4M2 6l4-4M2 18l4 4M2 6l4 4M2 18l-4-4"/><rect x="6" y="2" width="12" height="20" rx="2"/></svg>
+      Pipeline
+      <span class="nav-badge">12</span>
+    </div>
+    <div class="nav-item notif" onclick="navigate('contacts')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Contacts
+    </div>
+    <div class="nav-section">Catalogue</div>
+    <div class="nav-item" onclick="navigate('stock')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+      Stock Véhicules
+    </div>
+    <div class="nav-item" onclick="navigate('objectifs')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+      Objectifs
+    </div>
+    <div class="nav-section">Paramètres</div>
+    <div class="nav-item" onclick="navigate('settings')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+      Paramètres
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <div class="avatar">JM</div>
+      <div>
+        <div class="user-name">Jean Martin</div>
+        <div class="user-role">Directeur Commercial</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- Main -->
+<main class="main">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="page-title" id="page-title">Tableau de bord</div>
+    <div class="search-bar">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#555c6a" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="Rechercher..." id="search-input" oninput="handleSearch(this.value)">
+    </div>
+    <button class="btn btn-ghost" onclick="openModal('add-contact')">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Ajouter
+    </button>
+    <button class="btn btn-primary" onclick="openModal('add-deal')">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Nouvelle affaire
+    </button>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Ventes du mois</div>
+          <div class="kpi-value" style="color: var(--accent)">€ 847K</div>
+          <div class="kpi-trend trend-up">▲ +18% vs mois dernier</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Véhicules vendus</div>
+          <div class="kpi-value">34</div>
+          <div class="kpi-trend trend-up">▲ +6 cette semaine</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Affaires en cours</div>
+          <div class="kpi-value">78</div>
+          <div class="kpi-trend" style="color: var(--text3)">— 12 nouvelles ce mois</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Taux de conversion</div>
+          <div class="kpi-value">43%</div>
+          <div class="kpi-trend trend-down">▼ -2% vs objectif</div>
+        </div>
+      </div>
+
+      <div class="charts-row">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Ventes par mois</div>
+              <div class="chart-sub">2024 — CA en milliers €</div>
+            </div>
+          </div>
+          <div class="bar-chart">
+            <div class="bar-group"><div class="bar" style="height:55%;background:rgba(212,168,67,0.4)"></div><div class="bar-label">Jan</div></div>
+            <div class="bar-group"><div class="bar" style="height:62%;background:rgba(212,168,67,0.4)"></div><div class="bar-label">Fév</div></div>
+            <div class="bar-group"><div class="bar" style="height:70%;background:rgba(212,168,67,0.4)"></div><div class="bar-label">Mar</div></div>
+            <div class="bar-group"><div class="bar" style="height:78%;background:rgba(212,168,67,0.5)"></div><div class="bar-label">Avr</div></div>
+            <div class="bar-group"><div class="bar" style="height:65%;background:rgba(212,168,67,0.4)"></div><div class="bar-label">Mai</div></div>
+            <div class="bar-group"><div class="bar" style="height:82%;background:rgba(212,168,67,0.5)"></div><div class="bar-label">Jun</div></div>
+            <div class="bar-group"><div class="bar" style="height:88%;background:rgba(212,168,67,0.6)"></div><div class="bar-label">Jul</div></div>
+            <div class="bar-group"><div class="bar" style="height:75%;background:rgba(212,168,67,0.5)"></div><div class="bar-label">Aoû</div></div>
+            <div class="bar-group"><div class="bar" style="height:90%;background:rgba(212,168,67,0.6)"></div><div class="bar-label">Sep</div></div>
+            <div class="bar-group"><div class="bar" style="height:95%;background:rgba(212,168,67,0.7)"></div><div class="bar-label">Oct</div></div>
+            <div class="bar-group"><div class="bar" style="height:85%;background:rgba(212,168,67,0.6)"></div><div class="bar-label">Nov</div></div>
+            <div class="bar-group"><div class="bar" style="height:100%;background:var(--accent)"></div><div class="bar-label">Déc</div></div>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Répartition par marque</div>
+              <div class="chart-sub">Ventes 2024</div>
+            </div>
+          </div>
+          <div class="donut-wrap">
+            <svg width="110" height="110" viewBox="0 0 42 42">
+              <circle cx="21" cy="21" r="15.915" fill="none" stroke="#181c22" stroke-width="8"/>
+              <circle cx="21" cy="21" r="15.915" fill="none" stroke="#d4a843" stroke-width="8" stroke-dasharray="30 70" stroke-dashoffset="25"/>
+              <circle cx="21" cy="21" r="15.915" fill="none" stroke="#4caf82" stroke-width="8" stroke-dasharray="25 75" stroke-dashoffset="-5"/>
+              <circle cx="21" cy="21" r="15.915" fill="none" stroke="#4a8fcc" stroke-width="8" stroke-dasharray="20 80" stroke-dashoffset="-30"/>
+              <circle cx="21" cy="21" r="15.915" fill="none" stroke="#8b6fd4" stroke-width="8" stroke-dasharray="15 85" stroke-dashoffset="-50"/>
+              <circle cx="21" cy="21" r="15.915" fill="none" stroke="#555c6a" stroke-width="8" stroke-dasharray="10 90" stroke-dashoffset="-65"/>
+            </svg>
+            <div class="donut-legend">
+              <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>BMW — 30%</div>
+              <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Mercedes — 25%</div>
+              <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div>Audi — 20%</div>
+              <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div>Porsche — 15%</div>
+              <div class="legend-item"><div class="legend-dot" style="background:#555c6a"></div>Autres — 10%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent deals -->
+      <div class="table-card">
+        <div class="table-header">
+          <span style="font-size:14px;font-weight:500;">Affaires récentes</span>
+          <button class="btn btn-ghost" onclick="navigate('pipeline')" style="font-size:12px;padding:6px 12px;">Voir tout →</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Client</th><th>Véhicule</th><th>Valeur</th><th>Étape</th><th>Vendeur</th><th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="recent-deals-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PIPELINE -->
+    <div class="page" id="page-pipeline">
+      <div class="tab-filters">
+        <button class="tab-filter active" onclick="filterPipeline('all', this)">Toutes (78)</button>
+        <button class="tab-filter" onclick="filterPipeline('mine', this)">Mes affaires (23)</button>
+        <button class="tab-filter" onclick="filterPipeline('hot', this)">Chaudes</button>
+        <button class="tab-filter" onclick="filterPipeline('closing', this)">À clôturer ce mois</button>
+      </div>
+      <div class="pipeline-stages" id="pipeline-board"></div>
+    </div>
+
+    <!-- CONTACTS -->
+    <div class="page" id="page-contacts">
+      <div class="tab-filters">
+        <button class="tab-filter active" onclick="filterContacts('all', this)">Tous (156)</button>
+        <button class="tab-filter" onclick="filterContacts('client', this)">Clients</button>
+        <button class="tab-filter" onclick="filterContacts('prospect', this)">Prospects</button>
+        <button class="tab-filter" onclick="filterContacts('vip', this)">VIP</button>
+      </div>
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr><th>Nom</th><th>Email</th><th>Téléphone</th><th>Statut</th><th>Dernier contact</th><th>CA Total</th><th></th></tr>
+          </thead>
+          <tbody id="contacts-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- STOCK -->
+    <div class="page" id="page-stock">
+      <div class="tab-filters">
+        <button class="tab-filter active" onclick="filterStock('all', this)">Tout le stock (87)</button>
+        <button class="tab-filter" onclick="filterStock('neuf', this)">Neuf</button>
+        <button class="tab-filter" onclick="filterStock('occasion', this)">Occasion</button>
+        <button class="tab-filter" onclick="filterStock('reserved', this)">Réservé</button>
+      </div>
+      <div class="stock-grid" id="stock-grid"></div>
+    </div>
+
+    <!-- OBJECTIFS -->
+    <div class="page" id="page-objectifs">
+      <div class="charts-row">
+        <div class="chart-card">
+          <div class="chart-header"><div><div class="chart-title">Objectifs mensuels</div><div class="chart-sub">Mai 2025</div></div></div>
+          <div class="obj-list">
+            <div class="obj-item">
+              <div class="obj-header"><span class="obj-name">Chiffre d'affaires</span><span class="obj-pct">84%</span></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:84%;background:var(--accent)"></div></div>
+              <div style="font-size:11px;color:var(--text3);margin-top:6px">€ 847K / € 1M objectif</div>
+            </div>
+            <div class="obj-item">
+              <div class="obj-header"><span class="obj-name">Véhicules vendus</span><span class="obj-pct">68%</span></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:68%;background:var(--blue)"></div></div>
+              <div style="font-size:11px;color:var(--text3);margin-top:6px">34 / 50 objectif</div>
+            </div>
+            <div class="obj-item">
+              <div class="obj-header"><span class="obj-name">Nouveaux prospects</span><span class="obj-pct">110%</span></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:100%;background:var(--green)"></div></div>
+              <div style="font-size:11px;color:var(--text3);margin-top:6px">22 / 20 objectif — ✓ Atteint</div>
+            </div>
+            <div class="obj-item">
+              <div class="obj-header"><span class="obj-name">Satisfaction client</span><span class="obj-pct">92%</span></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:92%;background:var(--purple)"></div></div>
+              <div style="font-size:11px;color:var(--text3);margin-top:6px">4.6 / 5.0 score NPS</div>
+            </div>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header"><div><div class="chart-title">Performance équipe</div><div class="chart-sub">Classement ce mois</div></div></div>
+          <table style="margin-top:4px">
+            <thead><tr><th>#</th><th>Vendeur</th><th>Ventes</th><th>CA</th><th>Perf.</th></tr></thead>
+            <tbody>
+              <tr><td style="color:var(--accent);font-weight:700">1</td><td>Sophie Durand</td><td>9</td><td>€ 215K</td><td><span class="badge badge-green">+22%</span></td></tr>
+              <tr><td style="color:var(--text2)">2</td><td>Marc Leblanc</td><td>8</td><td>€ 198K</td><td><span class="badge badge-green">+15%</span></td></tr>
+              <tr><td style="color:var(--text2)">3</td><td>Julie Petit</td><td>7</td><td>€ 176K</td><td><span class="badge badge-amber">+8%</span></td></tr>
+              <tr><td style="color:var(--text2)">4</td><td>Thomas Roux</td><td>6</td><td>€ 154K</td><td><span class="badge badge-amber">+5%</span></td></tr>
+              <tr><td style="color:var(--text2)">5</td><td>Emma Moreau</td><td>4</td><td>€ 104K</td><td><span class="badge badge-red">-3%</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="page" id="page-settings">
+      <div style="max-width:600px">
+        <div class="detail-card" style="margin-bottom:16px">
+          <div style="font-size:14px;font-weight:600;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)">Profil utilisateur</div>
+          <div class="form-row">
+            <div class="form-group"><label>Prénom</label><input type="text" value="Jean"></div>
+            <div class="form-group"><label>Nom</label><input type="text" value="Martin"></div>
+          </div>
+          <div class="form-group"><label>Email</label><input type="email" value="j.martin@autoconcession.fr"></div>
+          <div class="form-group"><label>Rôle</label><select><option selected>Directeur Commercial</option><option>Vendeur</option><option>Admin</option></select></div>
+          <button class="btn btn-primary" style="margin-top:4px">Enregistrer</button>
+        </div>
+        <div class="detail-card">
+          <div style="font-size:14px;font-weight:600;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)">Concession</div>
+          <div class="form-group"><label>Nom</label><input type="text" value="AutoPremium Paris 16e"></div>
+          <div class="form-group"><label>Adresse</label><input type="text" value="28 Avenue Foch, 75116 Paris"></div>
+          <div class="form-group"><label>Marques représentées</label><input type="text" value="BMW, Mercedes-Benz, Audi, Porsche"></div>
+          <button class="btn btn-primary" style="margin-top:4px">Enregistrer</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- Modals -->
+<div class="modal-overlay" id="modal-add-contact">
+  <div class="modal">
+    <div class="modal-title">Nouveau contact</div>
+    <div class="form-row">
+      <div class="form-group"><label>Prénom</label><input type="text" placeholder="Pierre"></div>
+      <div class="form-group"><label>Nom</label><input type="text" placeholder="Dupont"></div>
+    </div>
+    <div class="form-group"><label>Email</label><input type="email" placeholder="pierre.dupont@email.com"></div>
+    <div class="form-group"><label>Téléphone</label><input type="tel" placeholder="+33 6 00 00 00 00"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Statut</label><select><option>Prospect</option><option>Client</option><option>VIP</option></select></div>
+      <div class="form-group"><label>Source</label><select><option>Site web</option><option>Recommandation</option><option>Salon</option><option>Appel entrant</option></select></div>
+    </div>
+    <div class="form-group"><label>Notes</label><textarea rows="3" placeholder="Intéressé par..."></textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('add-contact')">Annuler</button>
+      <button class="btn btn-primary" onclick="saveContact()">Créer le contact</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-add-deal">
+  <div class="modal">
+    <div class="modal-title">Nouvelle affaire</div>
+    <div class="form-group"><label>Client</label><input type="text" placeholder="Nom du client"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Marque</label><select><option>BMW</option><option>Mercedes-Benz</option><option>Audi</option><option>Porsche</option></select></div>
+      <div class="form-group"><label>Modèle</label><input type="text" placeholder="Série 5, Classe C..."></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Valeur estimée (€)</label><input type="number" placeholder="45000"></div>
+      <div class="form-group"><label>Étape</label><select><option>Prospect</option><option>Qualification</option><option>Proposition</option><option>Négociation</option></select></div>
+    </div>
+    <div class="form-group"><label>Vendeur assigné</label><select><option>Sophie Durand</option><option>Marc Leblanc</option><option>Julie Petit</option><option>Thomas Roux</option></select></div>
+    <div class="form-group"><label>Notes</label><textarea rows="2"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('add-deal')">Annuler</button>
+      <button class="btn btn-primary" onclick="saveDeal()">Créer l'affaire</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const DATA = {
+  deals: [
+    {id:1, client:'Alexandre Fontaine', car:'BMW Série 7', value:98500, stage:'Négociation', seller:'Sophie Durand', sellerColor:'#d4a843', date:'03/05/2025', days:5},
+    {id:2, client:'Claire Mercier', car:'Mercedes GLE', value:76400, stage:'Proposition', seller:'Marc Leblanc', sellerColor:'#4a8fcc', date:'02/05/2025', days:8},
+    {id:3, client:'David Renaud', car:'Porsche Cayenne', value:124000, stage:'Qualification', seller:'Julie Petit', sellerColor:'#8b6fd4', date:'01/05/2025', days:12},
+    {id:4, client:'Marie Tissot', car:'Audi Q8', value:89000, stage:'Négociation', seller:'Thomas Roux', sellerColor:'#4caf82', date:'30/04/2025', days:3},
+    {id:5, client:'Paul Girard', car:'BMW X5', value:67500, stage:'Proposition', seller:'Sophie Durand', sellerColor:'#d4a843', date:'29/04/2025', days:15},
+    {id:6, client:'Isabelle Noir', car:'Mercedes AMG GT', value:156000, stage:'Prospect', seller:'Marc Leblanc', sellerColor:'#4a8fcc', date:'28/04/2025', days:2},
+    {id:7, client:'Louis Bernard', car:'Porsche 911', value:138000, stage:'Clôturé', seller:'Julie Petit', sellerColor:'#8b6fd4', date:'27/04/2025', days:0},
+    {id:8, client:'Nathalie Blanc', car:'Audi RS6', value:112000, stage:'Qualification', seller:'Emma Moreau', sellerColor:'#e05656', date:'26/04/2025', days:7},
+    {id:9, client:'Pierre Dupuis', car:'BMW M5', value:119000, stage:'Clôturé', seller:'Thomas Roux', sellerColor:'#4caf82', date:'25/04/2025', days:0},
+    {id:10, client:'Sophie Lambert', car:'Mercedes S-Class', value:145000, stage:'Prospect', seller:'Sophie Durand', sellerColor:'#d4a843', date:'24/04/2025', days:1},
+    {id:11, client:'Antoine Faure', car:'Audi e-tron GT', value:103000, stage:'Négociation', seller:'Marc Leblanc', sellerColor:'#4a8fcc', date:'23/04/2025', days:9},
+    {id:12, client:'Caroline Vidal', car:'Porsche Macan', value:72000, stage:'Proposition', seller:'Julie Petit', sellerColor:'#8b6fd4', date:'22/04/2025', days:11},
+  ],
+  contacts: [
+    {id:1, first:'Alexandre', last:'Fontaine', email:'a.fontaine@finance.fr', phone:'+33 6 12 34 56 78', status:'VIP', lastContact:'Aujourd\'hui', ca:'€ 324K'},
+    {id:2, first:'Claire', last:'Mercier', email:'claire.mercier@gmail.com', phone:'+33 6 23 45 67 89', status:'Client', lastContact:'Hier', ca:'€ 76K'},
+    {id:3, first:'David', last:'Renaud', email:'d.renaud@renaud.com', phone:'+33 6 34 56 78 90', status:'Prospect', lastContact:'01/05', ca:'—'},
+    {id:4, first:'Marie', last:'Tissot', email:'m.tissot@tissot.fr', phone:'+33 6 45 67 89 01', status:'Client', lastContact:'30/04', ca:'€ 145K'},
+    {id:5, first:'Paul', last:'Girard', email:'paul.girard@email.com', phone:'+33 6 56 78 90 12', status:'Prospect', lastContact:'29/04', ca:'—'},
+    {id:6, first:'Isabelle', last:'Noir', email:'i.noir@luxury.fr', phone:'+33 6 67 89 01 23', status:'VIP', lastContact:'28/04', ca:'€ 512K'},
+    {id:7, first:'Louis', last:'Bernard', email:'l.bernard@bernard.fr', phone:'+33 6 78 90 12 34', status:'Client', lastContact:'27/04', ca:'€ 138K'},
+    {id:8, first:'Nathalie', last:'Blanc', email:'nathalie.blanc@email.com', phone:'+33 6 89 01 23 45', status:'Prospect', lastContact:'26/04', ca:'—'},
+  ],
+  stock: [
+    {id:1, emoji:'🚗', brand:'BMW', model:'Série 5 530e', year:2024, type:'Neuf', price:62900, km:0, color:'Noir Saphir', status:'Disponible'},
+    {id:2, emoji:'🚙', brand:'Mercedes', model:'GLE 450 AMG', year:2024, type:'Neuf', price:89500, km:0, color:'Blanc Polaire', status:'Réservé'},
+    {id:3, emoji:'🏎️', brand:'Porsche', model:'911 Carrera S', year:2023, type:'Occasion', price:128000, km:12400, color:'Rouge Carmin', status:'Disponible'},
+    {id:4, emoji:'🚗', brand:'Audi', model:'A8 55 TFSI', year:2024, type:'Neuf', price:104000, km:0, color:'Gris Quantum', status:'Disponible'},
+    {id:5, emoji:'🚙', brand:'BMW', model:'X7 xDrive50e', year:2023, type:'Occasion', price:87500, km:22000, color:'Bleu Tanzanite', status:'Disponible'},
+    {id:6, emoji:'🏎️', brand:'Mercedes', model:'AMG GT 63 S', year:2024, type:'Neuf', price:178000, km:0, color:'Gris Graphite', status:'Disponible'},
+    {id:7, emoji:'🚗', brand:'Porsche', model:'Cayenne Turbo', year:2023, type:'Occasion', price:134000, km:18500, color:'Blanc Craie', status:'Réservé'},
+    {id:8, emoji:'🚙', brand:'Audi', model:'e-tron GT RS', year:2024, type:'Neuf', price:142000, km:0, color:'Vert Tactique', status:'Disponible'},
+  ]
+};
+
+const STAGES = ['Prospect', 'Qualification', 'Proposition', 'Négociation', 'Clôturé'];
+const STAGE_COLORS = {'Prospect':'#555c6a','Qualification':'#4a8fcc','Proposition':'#d4a843','Négociation':'#e05656','Clôturé':'#4caf82'};
+const STATUS_BADGE = {'VIP':'badge-amber','Client':'badge-green','Prospect':'badge-blue'};
+const STOCK_STATUS = {'Disponible':'badge-green','Réservé':'badge-amber'};
+const TYPE_BADGE = {'Neuf':'badge-blue','Occasion':'badge-gray'};
+
+function fmt(n){ return n.toLocaleString('fr-FR'); }
+
+function renderDashboard(){
+  const tbody = document.getElementById('recent-deals-body');
+  tbody.innerHTML = DATA.deals.slice(0,6).map(d => `
+    <tr>
+      <td><strong>${d.client}</strong></td>
+      <td style="color:var(--text2)">${d.car}</td>
+      <td style="color:var(--accent);font-weight:600">€ ${fmt(d.value)}</td>
+      <td><span class="badge" style="background:${STAGE_COLORS[d.stage]}22;color:${STAGE_COLORS[d.stage]}">${d.stage}</span></td>
+      <td style="color:var(--text2);font-size:12px">${d.seller}</td>
+      <td style="color:var(--text3);font-size:12px">${d.date}</td>
+    </tr>
+  `).join('');
+}
+
+function renderPipeline(){
+  const board = document.getElementById('pipeline-board');
+  board.innerHTML = STAGES.map(stage => {
+    const deals = DATA.deals.filter(d => d.stage === stage);
+    const total = deals.reduce((s,d)=>s+d.value,0);
+    return `
+      <div class="stage-col">
+        <div class="stage-header" style="background:${STAGE_COLORS[stage]}18;color:${STAGE_COLORS[stage]}">
+          <span>${stage} (${deals.length})</span>
+          <span style="font-size:10px;font-weight:400">€ ${fmt(total)}</span>
+        </div>
+        <div class="stage-body">
+          ${deals.map(d => `
+            <div class="deal-card" onclick="showDealDetail(${d.id})">
+              <div class="deal-name">${d.client}</div>
+              <div class="deal-car">${d.car}</div>
+              <div class="deal-value">€ ${fmt(d.value)}</div>
+              <div class="deal-footer">
+                <span class="deal-days">${d.days > 0 ? d.days+'j dans étape' : '✓ Signé'}</span>
+                <div class="deal-avatar" style="background:${d.sellerColor}22;color:${d.sellerColor}">${d.seller.split(' ').map(x=>x[0]).join('')}</div>
+              </div>
+            </div>
+          `).join('')}
+          <div style="border:1px dashed var(--border);border-radius:8px;padding:10px;text-align:center;font-size:12px;color:var(--text3);cursor:pointer" onclick="openModal('add-deal')">+ Ajouter</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderContacts(){
+  const tbody = document.getElementById('contacts-body');
+  tbody.innerHTML = DATA.contacts.map(c => `
+    <tr>
+      <td>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="deal-avatar" style="width:32px;height:32px;font-size:11px;background:rgba(212,168,67,0.15);color:var(--accent)">${c.first[0]}${c.last[0]}</div>
+          <strong>${c.first} ${c.last}</strong>
+        </div>
+      </td>
+      <td style="color:var(--text2);font-size:12px">${c.email}</td>
+      <td style="color:var(--text2);font-size:12px">${c.phone}</td>
+      <td><span class="badge ${STATUS_BADGE[c.status]}">${c.status}</span></td>
+      <td style="color:var(--text3);font-size:12px">${c.lastContact}</td>
+      <td style="color:var(--accent);font-weight:500">${c.ca}</td>
+      <td>
+        <button class="btn btn-ghost" style="font-size:11px;padding:4px 10px" onclick="showContact(${c.id})">Voir →</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function renderStock(){
+  const grid = document.getElementById('stock-grid');
+  grid.innerHTML = DATA.stock.map(v => `
+    <div class="stock-card">
+      <div class="stock-img" style="background:var(--surface2)">${v.emoji}</div>
+      <div class="stock-body">
+        <div class="stock-model">${v.brand} ${v.model}</div>
+        <div class="stock-info">${v.year} · ${v.color}</div>
+        <div style="display:flex;gap:6px;margin-bottom:10px">
+          <span class="badge ${TYPE_BADGE[v.type]}">${v.type}</span>
+          <span class="badge ${STOCK_STATUS[v.status]}">${v.status}</span>
+        </div>
+        <div class="stock-footer">
+          <div>
+            <div class="stock-price">€ ${fmt(v.price)}</div>
+            <div class="stock-mileage">${v.km > 0 ? fmt(v.km)+' km' : '0 km — neuf'}</div>
+          </div>
+          <button class="btn btn-ghost" style="font-size:11px;padding:5px 10px">Détail</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function navigate(page){
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const titles = {dashboard:'Tableau de bord',pipeline:'Pipeline des ventes',contacts:'Contacts & Prospects',stock:'Stock Véhicules',objectifs:'Objectifs & Performance',settings:'Paramètres'};
+  document.getElementById('page-title').textContent = titles[page] || page;
+  event.currentTarget && event.currentTarget.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if(n.getAttribute('onclick') && n.getAttribute('onclick').includes("'"+page+"'")) n.classList.add('active');
+  });
+}
+
+function openModal(name){ document.getElementById('modal-'+name).classList.add('open'); }
+function closeModal(name){ document.getElementById('modal-'+name).classList.remove('open'); }
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if(e.target === m) m.classList.remove('open'); });
+});
+
+function saveContact(){ closeModal('add-contact'); alert('Contact créé avec succès !'); }
+function saveDeal(){ closeModal('add-deal'); alert('Affaire créée avec succès !'); }
+function showDealDetail(id){ const d = DATA.deals.find(x=>x.id===id); alert(`${d.client}\n${d.car}\n€ ${fmt(d.value)}\nÉtape: ${d.stage}\nVendeur: ${d.seller}`); }
+function showContact(id){ const c = DATA.contacts.find(x=>x.id===id); alert(`${c.first} ${c.last}\n${c.email}\n${c.phone}\nStatut: ${c.status}`); }
+function filterPipeline(f, btn){ document.querySelectorAll('#page-pipeline .tab-filter').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
+function filterContacts(f, btn){ document.querySelectorAll('#page-contacts .tab-filter').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
+function filterStock(f, btn){ document.querySelectorAll('#page-stock .tab-filter').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
+function handleSearch(v){ if(v.length > 1) console.log('Recherche:', v); }
+
+renderDashboard();
+renderPipeline();
+renderContacts();
+renderStock();
+</script>
+</body>
+</html>
