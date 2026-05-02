@@ -3,134 +3,316 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Sales Cockpit V4 Planning</title>
+<title>Sales Cockpit V5</title>
 <style>
 :root{--bg:#f5f7fb;--card:#fff;--text:#152033;--muted:#667085;--line:#d9e2ec;--primary:#0f766e;--primary2:#22c55e;--danger:#b42318;--warn:#b45309;--ok:#0f766e;--shadow:0 16px 36px rgba(16,24,40,.08);--r:18px;font-family:Inter,system-ui,Arial,sans-serif}
 [data-theme='dark']{--bg:#0b1220;--card:#111827;--text:#e5e7eb;--muted:#98a2b3;--line:#253041;--primary:#22c55e;--primary2:#16a34a;--danger:#fb7185;--warn:#fbbf24;--ok:#22c55e;--shadow:0 16px 36px rgba(0,0,0,.28)}
 *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text)} button,input,select,textarea{font:inherit}
 .wrap{max-width:1560px;margin:0 auto;padding:22px;display:grid;gap:16px}
-.hero{background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;border-radius:24px;padding:24px;box-shadow:var(--shadow)}
-.top{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap}.h1{font-size:clamp(28px,4vw,46px);font-weight:900;margin:0}.sub{opacity:.94;margin-top:8px;max-width:86ch}
-.row{display:flex;gap:10px;flex-wrap:wrap}.btn{border:0;border-radius:999px;padding:10px 14px;background:var(--primary);color:#fff;font-weight:800;cursor:pointer}.btn.secondary{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.2)}.btn.danger{background:var(--danger);color:#fff}.btn.sm{padding:7px 10px;font-size:13px}.btn.green{background:var(--primary2);color:#fff}
+.hero{background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;border-radius:24px;padding:24px 28px;box-shadow:var(--shadow)}
+.top{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap}.h1{font-size:clamp(26px,4vw,44px);font-weight:900;margin:0}.sub{opacity:.9;margin-top:6px;font-size:15px}
+.btns{display:flex;gap:10px;flex-wrap:wrap}.btn{border:0;border-radius:999px;padding:10px 16px;font-weight:800;cursor:pointer;font-size:14px}.btn.secondary{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.2)}.btn.danger{background:var(--danger);color:#fff}.btn.sm{padding:7px 11px;font-size:13px}.btn.green{background:var(--primary2);color:#fff}.btn.outline{background:transparent;border:1px solid var(--line);color:var(--text);border-radius:999px;padding:8px 14px;font-size:14px;cursor:pointer}
+
+/* NAV TABS */
+.nav{display:flex;gap:8px;background:var(--card);border-radius:999px;padding:6px;box-shadow:var(--shadow);width:fit-content}
+.tab{border:0;background:transparent;border-radius:999px;padding:10px 22px;font-weight:700;font-size:15px;cursor:pointer;color:var(--muted);transition:.15s}
+.tab.active{background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;box-shadow:0 4px 16px rgba(15,118,110,.25)}
+
+.page{display:none}.page.active{display:grid;gap:14px}
 .grid{display:grid;gap:14px}.kpis{grid-template-columns:repeat(4,minmax(0,1fr))}.main{grid-template-columns:1.15fr .85fr}.bottom{grid-template-columns:1fr 1fr}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:18px;resize:both;overflow:auto;min-width:280px;min-height:180px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:18px;overflow:auto;min-width:240px;min-height:120px}
 .card.dragging{outline:2px dashed var(--primary);opacity:.75}.dropzone{outline:2px dashed var(--primary2)}
 .kpi .label{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}.kpi .value{font-size:32px;font-weight:900;margin-top:8px;color:var(--primary)}.kpi .foot{color:var(--muted);margin-top:4px;font-size:14px}
 .head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap}.head h2{margin:0;font-size:20px;color:var(--primary)}
-.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.pill,.search,.date{border:1px solid var(--line);border-radius:999px;padding:10px 14px;background:transparent;color:var(--text)}
-.list{display:grid;gap:10px}.person-row{display:grid;grid-template-columns:1.2fr .8fr .8fr auto;gap:10px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--card)}
-.person{display:flex;gap:12px;align-items:center}.avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:color-mix(in oklab,var(--primary) 15%, var(--card));color:var(--primary);font-weight:900}
-.small{font-size:12px;color:var(--muted)} .progress{height:10px;background:var(--line);border-radius:999px;overflow:hidden}.bar{height:100%;background:linear-gradient(90deg,var(--primary),var(--primary2))}
-.tag{display:inline-flex;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:800}.ok{background:color-mix(in oklab,var(--ok) 18%, var(--card));color:var(--ok)}.amber{background:color-mix(in oklab,var(--warn) 18%, var(--card));color:var(--warn)}.blue{background:color-mix(in oklab,var(--primary2) 16%, var(--card));color:var(--primary2)}.rose{background:color-mix(in oklab,var(--danger) 16%, var(--card));color:var(--danger)}
-.table{display:grid;gap:10px}.item{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--card)}.done .txt{text-decoration:line-through;color:var(--muted)}.check{width:20px;height:20px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.search,.pill{border:1px solid var(--line);border-radius:999px;padding:9px 14px;background:transparent;color:var(--text)}
+.list{display:grid;gap:10px}.person-row{display:grid;grid-template-columns:1.4fr .7fr .7fr auto;gap:10px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:16px}
+.person{display:flex;gap:12px;align-items:center}.avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:color-mix(in oklab,var(--primary) 15%, var(--card));color:var(--primary);font-weight:900;flex-shrink:0}
+.small{font-size:12px;color:var(--muted)} .progress{height:8px;background:var(--line);border-radius:999px;overflow:hidden;margin-top:6px}.bar{height:100%;background:linear-gradient(90deg,var(--primary),var(--primary2))}
+.tag{display:inline-flex;padding:5px 10px;border-radius:999px;font-size:12px;font-weight:800}.ok{background:color-mix(in oklab,var(--ok) 18%, var(--card));color:var(--ok)}.amber{background:color-mix(in oklab,var(--warn) 18%, var(--card));color:var(--warn)}.rose{background:color-mix(in oklab,var(--danger) 16%, var(--card));color:var(--danger)}
+.table{display:grid;gap:8px}.item{display:flex;gap:10px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:16px}.done .txt{text-decoration:line-through;color:var(--muted)}.check{width:20px;height:20px;flex-shrink:0}
 .editor{display:grid;gap:10px;grid-template-columns:repeat(2,minmax(0,1fr))}.full{grid-column:1/-1}
-input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:14px;background:transparent;color:var(--text)} textarea{resize:vertical;min-height:110px}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}.modal.open{display:flex}.modal-card{width:min(900px,100%);background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:18px}
-.modal-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}.x{background:transparent;border:1px solid var(--line);color:var(--text);border-radius:12px;padding:10px 12px;cursor:pointer}
-.calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px}.day{min-height:200px;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--card)}.day h4{margin:0 0 8px;font-size:16px;color:var(--primary)}.event{padding:8px 10px;border-radius:12px;margin-top:8px;font-size:13px;color:#fff;cursor:pointer;position:relative}.event .mini{font-size:12px;opacity:.9;margin-top:3px}.event .del{position:absolute;top:6px;right:8px;background:rgba(255,255,255,.2);border:0;color:#fff;border-radius:999px;width:22px;height:22px;cursor:pointer}
-.blueBg{background:linear-gradient(135deg,var(--primary2),#2563eb)}.greenBg{background:linear-gradient(135deg,var(--ok),#14b8a6)}.amberBg{background:linear-gradient(135deg,var(--warn),#f97316)}.roseBg{background:linear-gradient(135deg,var(--danger),#ec4899)}
-.stats{display:grid;gap:10px}.stat{display:flex;justify-content:space-between;gap:10px;padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--card)}.sr{position:absolute;left:-9999px}
-.finance{display:grid;gap:10px}.fitem{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--card)}.money{font-weight:900}.plus{color:var(--primary)}.minus{color:var(--danger)}
+input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:14px;background:transparent;color:var(--text)} textarea{resize:vertical;min-height:90px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:16px;z-index:100}.modal.open{display:flex}.modal-card{width:min(880px,100%);background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:22px;max-height:90vh;overflow-y:auto}
+.modal-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px}.x{background:transparent;border:1px solid var(--line);color:var(--text);border-radius:12px;padding:9px 13px;cursor:pointer}
+/* PLANNING */
+.plcal{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}.day{min-height:220px;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--bg)}.day h4{margin:0 0 8px;font-size:15px;font-weight:800;color:var(--primary)}.slot{padding:8px 10px;border-radius:12px;margin-top:6px;font-size:12px;color:#fff;position:relative;cursor:pointer}.slot .sdel{position:absolute;top:5px;right:7px;background:rgba(255,255,255,.2);border:0;color:#fff;border-radius:999px;width:20px;height:20px;cursor:pointer;font-size:12px}.slot .mini{opacity:.85;margin-top:2px;font-size:11px}.pause{background:color-mix(in oklab,var(--muted) 20%, var(--card));border-radius:12px;margin-top:6px;padding:6px 10px;font-size:11px;color:var(--muted);text-align:center}
+.greenBg{background:linear-gradient(135deg,var(--ok),#14b8a6)}.blueBg{background:linear-gradient(135deg,#0d5aa7,#2563eb)}.amberBg{background:linear-gradient(135deg,var(--warn),#f97316)}.roseBg{background:linear-gradient(135deg,var(--danger),#ec4899)}
+.ctrl-table{width:100%;border-collapse:collapse}.ctrl-table th,.ctrl-table td{padding:10px 8px;text-align:left;border-bottom:1px solid var(--line);font-size:13px}.ctrl-table th{color:var(--muted);font-weight:700;font-size:11px;text-transform:uppercase}.ctrl-table input{width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:transparent;color:var(--text)}
+.finance{display:grid;gap:10px}.fitem{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:16px}.money{font-weight:900}.plus{color:var(--primary)}.minus{color:var(--danger)}
 .edit-on [contenteditable="true"]{outline:1px dashed var(--primary);border-radius:6px;padding:2px 4px}
-@media(max-width:1200px){.kpis,.main,.bottom,.person-row,.editor,.calendar,.finance{grid-template-columns:1fr 1fr}.person-row{grid-template-columns:1fr}.top{align-items:stretch}.wrap{padding:14px}}
-@media(max-width:720px){.kpis,.main,.bottom,.calendar,.editor,.person-row,.finance{grid-template-columns:1fr}.modal-card{padding:14px}}
+@media(max-width:1200px){.kpis,.main,.bottom,.plcal{grid-template-columns:repeat(2,1fr)}.person-row{grid-template-columns:1fr}.wrap{padding:14px}}
+@media(max-width:720px){.kpis,.main,.bottom,.plcal,.editor{grid-template-columns:1fr}.modal-card{padding:14px}.nav{width:100%}.tab{flex:1;text-align:center}}
 </style>
 </head>
 <body>
-<div class="wrap" id="dashboard">
+<div class="wrap">
   <section class="hero">
     <div class="top">
-      <div><div class="h1" contenteditable="true" data-edit="title">Sales Cockpit V4 Planning</div><div class="sub" contenteditable="true" data-edit="subtitle">Planning hebdo basé sur ton fichier Excel, avec phoning quotidien, rendez-vous, contrôle manager et mode admin.</div></div>
-      <div class="row"><button class="btn secondary" id="themeBtn">Mode sombre</button><button class="btn secondary" id="adminBtn">Admin</button><button class="btn secondary" id="resetBtn">Réinitialiser</button><button class="btn green" id="addSellerTop">+ Vendeur</button></div>
+      <div>
+        <div class="h1" contenteditable="true" data-edit="title">Sales Cockpit V5</div>
+        <div class="sub" contenteditable="true" data-edit="subtitle">Objectifs de vente · Phoning · Planning hebdo · Mode admin</div>
+      </div>
+      <div class="btns">
+        <button class="btn secondary" id="themeBtn">Mode sombre</button>
+        <button class="btn secondary" id="adminBtn">🔒 Admin</button>
+        <button class="btn secondary" id="resetBtn">Réinitialiser</button>
+      </div>
     </div>
   </section>
 
-  <div class="grid kpis">
-    <div class="card kpi" data-block="kpi1"><div class="label" contenteditable="true" data-edit="kpi1label">Objectif appels</div><div class="value" id="kpiCalls">0</div><div class="foot" contenteditable="true" data-edit="kpi1foot">appels / semaine</div></div>
-    <div class="card kpi" data-block="kpi2"><div class="label" contenteditable="true" data-edit="kpi2label">Rendez-vous</div><div class="value" id="kpiRdv">0</div><div class="foot" contenteditable="true" data-edit="kpi2foot">créneaux</div></div>
-    <div class="card kpi" data-block="kpi3"><div class="label" contenteditable="true" data-edit="kpi3label">Vendeurs</div><div class="value" id="kpiSellers">0</div><div class="foot" contenteditable="true" data-edit="kpi3foot">équipe</div></div>
-    <div class="card kpi" data-block="kpi4"><div class="label" contenteditable="true" data-edit="kpi4label">Pause déjeuner</div><div class="value">12-14</div><div class="foot" contenteditable="true" data-edit="kpi4foot">plage fixe</div></div>
+  <div class="nav" id="mainNav">
+    <button class="tab active" data-page="ventes">📊 Objectifs de vente</button>
+    <button class="tab" data-page="phoning">📞 Phoning & Agenda</button>
   </div>
 
-  <div class="grid main">
-    <div class="card" data-block="planningCard" id="planningCard">
-      <div class="head"><h2 contenteditable="true" data-edit="planningTitle">Agenda hebdo</h2><div class="row"><button class="btn green sm" id="addEventBtn">+ RDV</button><button class="btn secondary sm" id="loadExcelBtn">Charger modèle</button></div></div>
-      <div class="calendar" id="calendar"></div>
+  <!-- PAGE 1 : OBJECTIFS DE VENTE -->
+  <div class="page active" id="page-ventes">
+    <div class="grid kpis">
+      <div class="card kpi"><div class="label" contenteditable="true" data-edit="kpi1label">Objectif ventes</div><div class="value" id="kpiTarget">0</div><div class="foot" contenteditable="true" data-edit="kpi1foot">ventes / mois</div></div>
+      <div class="card kpi"><div class="label" contenteditable="true" data-edit="kpi2label">Réalisé</div><div class="value" id="kpiDone">0</div><div class="foot" contenteditable="true" data-edit="kpi2foot">ventes / mois</div></div>
+      <div class="card kpi"><div class="label" contenteditable="true" data-edit="kpi3label">Taux de réussite</div><div class="value" id="kpiRate">0%</div><div class="foot" contenteditable="true" data-edit="kpi3foot">objectif atteint</div></div>
+      <div class="card kpi"><div class="label" contenteditable="true" data-edit="kpi4label">Financements</div><div class="value" id="kpiFin">0</div><div class="foot" contenteditable="true" data-edit="kpi4foot">dossiers</div></div>
     </div>
-    <div class="card" data-block="sellerCard" id="sellerCard">
-      <div class="head"><h2 contenteditable="true" data-edit="sellersTitle">Vendeurs</h2><div class="toolbar"><input class="search" id="sellerSearch" placeholder="Rechercher un vendeur..."><select class="pill" id="sellerFilter"><option value="all">Tous</option></select></div></div>
-      <div class="list" id="sellerList"></div>
+    <div class="grid main">
+      <div class="card" id="sellerCard">
+        <div class="head">
+          <h2 contenteditable="true" data-edit="sellersTitle">Vendeurs</h2>
+          <div class="toolbar">
+            <input class="search" id="sellerSearch" placeholder="Rechercher un vendeur...">
+            <select class="pill" id="sellerFilter"><option value="all">Tous</option></select>
+            <button class="btn green sm" id="addSellerBtn">+ Vendeur</button>
+          </div>
+        </div>
+        <div class="list" id="sellerList"></div>
+      </div>
+      <div class="card" id="financeCard">
+        <div class="head"><h2 contenteditable="true" data-edit="financeTitle">Financements</h2><button class="btn green sm" id="addFinanceBtn">+ Financement</button></div>
+        <div class="finance" id="financeList"></div>
+      </div>
     </div>
   </div>
 
-  <div class="grid bottom">
-    <div class="card" data-block="tasksCard" id="tasksCard">
-      <div class="head"><h2 contenteditable="true" data-edit="tasksTitle">Contrôle manager</h2><button class="btn green sm" id="addTaskBtn">+ Ligne</button></div>
-      <div class="table" id="taskList"></div>
+  <!-- PAGE 2 : PHONING & AGENDA -->
+  <div class="page" id="page-phoning">
+    <div class="grid kpis">
+      <div class="card kpi"><div class="label" contenteditable="true" data-edit="pkpi1label">Appels objectif</div><div class="value" id="kpiCalls">0</div><div class="foot" contenteditable="true" data-edit="pkpi1foot">appels / semaine</div></div>
+      <div class="card kpi"><div class="label" contenteditable="true" data-edit="pkpi2label">RDV planifiés</div><div class="value" id="kpiRdv">0</div><div class="foot" contenteditable="true" data-edit="pkpi2foot">créneaux</div></div>
+      <div class="card kpi"><div class="label" contenteditable="true" data-edit="pkpi3label">Jours de phoning</div><div class="value">6</div><div class="foot" contenteditable="true" data-edit="pkpi3foot">Lun → Sam</div></div>
+      <div class="card kpi"><div class="label" contenteditable="true" data-edit="pkpi4label">Pause déjeuner</div><div class="value">12-14h</div><div class="foot" contenteditable="true" data-edit="pkpi4foot">pause fixe</div></div>
     </div>
-    <div class="card" data-block="financeCard" id="financeCard">
-      <div class="head"><h2 contenteditable="true" data-edit="financeTitle">Financements</h2><button class="btn green sm" id="addFinanceBtn">+ Financement</button></div>
-      <div class="finance" id="financeList"></div>
+    <div class="card" id="planningCard">
+      <div class="head">
+        <h2 contenteditable="true" data-edit="planningTitle">Agenda hebdomadaire</h2>
+        <div class="btns">
+          <button class="btn green sm" id="addEventBtn">+ RDV</button>
+          <button class="btn outline sm" id="loadModelBtn">Charger modèle</button>
+        </div>
+      </div>
+      <div class="plcal" id="calendar"></div>
+    </div>
+    <div class="card" id="ctrlCard">
+      <div class="head"><h2 contenteditable="true" data-edit="ctrlTitle">Contrôle manager – Phoning</h2><button class="btn green sm" id="addCtrlBtn">+ Ligne</button></div>
+      <table class="ctrl-table" id="ctrlTable">
+        <thead><tr><th>Jour</th><th>Bloc 1</th><th>Bloc 2</th><th>Objectif appels</th><th>Réalisé</th><th>Écart</th><th>Commentaire</th><th></th></tr></thead>
+        <tbody id="ctrlBody"></tbody>
+      </table>
     </div>
   </div>
 </div>
 
-<div class="modal" id="adminPanel"><div class="modal-card"><div class="modal-head"><h2 style="margin:0">Mode admin</h2><button class="x" id="closeAdmin">Fermer</button></div><div class="editor"><input class="full" id="adminPass" placeholder="Mot de passe admin" type="password"><button class="btn green sm" id="unlockAdmin" type="button">Déverrouiller</button><button class="btn secondary sm" id="lockAdmin" type="button">Verrouiller</button><button class="btn secondary sm full" id="saveLayoutBtn" type="button">Sauver le placement</button><div class="full small">Mot de passe : vw2026. Les blocs peuvent être déplacés et redimensionnés en mode admin.</div></div></div></div>
-<div class="modal" id="eventModal"><div class="modal-card"><div class="modal-head"><h2 style="margin:0">Créer / modifier un rendez-vous</h2><button class="x" id="closeModal">Fermer</button></div><form id="eventForm" class="editor"><input class="full" id="eTitle" placeholder="Titre du rendez-vous"><input id="eDay" placeholder="Jour" value="Lundi"><input id="eTime" placeholder="Heure" value="09:00"><select id="eColor"><option value="green">Vert</option><option value="blue">Bleu</option><option value="amber">Orange</option><option value="rose">Rose</option></select><textarea class="full" id="eDetail" placeholder="Détail"></textarea><div class="full row"><button class="btn green sm" type="submit">Enregistrer</button><button class="btn secondary sm" type="button" id="cancelEvent">Annuler</button></div></form></div></div>
-<div class="modal" id="financeModal"><div class="modal-card"><div class="modal-head"><h2 style="margin:0">Créer / modifier un financement</h2><button class="x" id="closeFinance">Fermer</button></div><form id="financeForm" class="editor"><input class="full" id="fClient" placeholder="Client"><input id="fType" placeholder="Type" value="LOA"><input id="fAmount" type="number" placeholder="Montant"><input id="fRate" type="number" placeholder="Taux %"><select id="fStatus"><option value="ok">Accepté</option><option value="amber">En attente</option><option value="rose">Refusé</option></select><textarea class="full" id="fNotes" placeholder="Notes"></textarea><div class="full row"><button class="btn green sm" type="submit">Enregistrer</button><button class="btn secondary sm" type="button" id="cancelFinance">Annuler</button></div></form></div></div>
+<!-- ADMIN PANEL -->
+<div class="modal" id="adminPanel"><div class="modal-card">
+  <div class="modal-head"><h2 style="margin:0">🔒 Mode admin</h2><button class="x" id="closeAdmin">Fermer</button></div>
+  <div class="editor">
+    <input class="full" id="adminPass" placeholder="Mot de passe admin" type="password">
+    <button class="btn green sm" id="unlockAdmin">Déverrouiller</button>
+    <button class="btn outline sm" id="lockAdmin">Verrouiller</button>
+    <button class="btn green sm full" id="openMailBtn" type="button">📧 Envoyer un mail de rappel</button><div class="full small" style="padding:10px;background:color-mix(in oklab,var(--primary) 8%, var(--card));border-radius:12px">Mot de passe : <strong>vw2026</strong><br>En mode admin : modifier les textes, déplacer les blocs, envoyer des rappels aux vendeurs.</div>
+  </div>
+</div></div>
 
+<!-- SELLER MODAL -->
+<div class="modal" id="sellerModal"><div class="modal-card">
+  <div class="modal-head"><h2 style="margin:0">Créer / modifier un vendeur</h2><button class="x" id="closeSellerModal">Fermer</button></div>
+  <form id="sellerForm" class="editor">
+    <input class="full" id="sName" placeholder="Nom du vendeur">
+    <input id="sTeam" placeholder="Équipe / marque" value="Volkswagen">
+    <input id="sTarget" type="number" placeholder="Objectif ventes">
+    <input id="sDone" type="number" placeholder="Ventes réalisées">
+    <input id="sRdv" type="number" placeholder="RDV / jour">
+    <select id="sStatus"><option value="ok">Dans le rythme</option><option value="amber">À surveiller</option><option value="rose">En retard</option></select>
+    <textarea class="full" id="sNotes" placeholder="Notes / priorités"></textarea>
+    <div class="full btns"><button class="btn green sm" type="submit">Enregistrer</button><button class="btn outline sm" type="button" id="cancelSeller">Annuler</button></div>
+  </form>
+</div></div>
+
+<!-- EVENT MODAL -->
+<div class="modal" id="eventModal"><div class="modal-card">
+  <div class="modal-head"><h2 style="margin:0">Créer / modifier un RDV</h2><button class="x" id="closeModal">Fermer</button></div>
+  <form id="eventForm" class="editor">
+    <input class="full" id="eTitle" placeholder="Titre du rendez-vous">
+    <select id="eDay"><option>Lundi</option><option>Mardi</option><option>Mercredi</option><option>Jeudi</option><option>Vendredi</option><option>Samedi</option></select>
+    <input id="eTime" placeholder="Heure ex: 09:00-10:00" value="09:00-10:00">
+    <select id="eColor"><option value="green">Vert</option><option value="blue">Bleu</option><option value="amber">Orange</option><option value="rose">Rose</option></select>
+    <textarea class="full" id="eDetail" placeholder="Détail"></textarea>
+    <div class="full btns"><button class="btn green sm" type="submit">Enregistrer</button><button class="btn outline sm" type="button" id="cancelEvent">Annuler</button></div>
+  </form>
+</div></div>
+
+<!-- FINANCE MODAL -->
+<div class="modal" id="financeModal"><div class="modal-card">
+  <div class="modal-head"><h2 style="margin:0">Créer / modifier un financement</h2><button class="x" id="closeFinance">Fermer</button></div>
+  <form id="financeForm" class="editor">
+    <input class="full" id="fClient" placeholder="Client">
+    <input id="fType" placeholder="Type" value="LOA">
+    <input id="fAmount" type="number" placeholder="Montant">
+    <input id="fRate" type="number" placeholder="Taux %">
+    <select id="fStatus"><option value="ok">Accepté</option><option value="amber">En attente</option><option value="rose">Refusé</option></select>
+    <textarea class="full" id="fNotes" placeholder="Notes"></textarea>
+    <div class="full btns"><button class="btn green sm" type="submit">Enregistrer</button><button class="btn outline sm" type="button" id="cancelFinance">Annuler</button></div>
+  </form>
+</div></div>
+
+
+<div class="modal" id="mailModal"><div class="modal-card">
+  <div class="modal-head"><h2 style="margin:0">📧 Envoyer un rappel vendeur</h2><button class="x" id="closeMail">Fermer</button></div>
+  <div class="editor">
+    <div class="full small" style="padding:10px;background:color-mix(in oklab,var(--primary) 8%, var(--card));border-radius:12px">Sélectionne un vendeur, rédige ton message. Le bouton ouvrira ton client mail avec le message prérempli.</div>
+    <select class="full" id="mailSeller"></select>
+    <input class="full" id="mailEmail" placeholder="Email du vendeur">
+    <input class="full" id="mailSubject" placeholder="Objet du mail" value="Rappel objectifs – Sales Cockpit">
+    <textarea class="full" id="mailBody" style="min-height:160px" placeholder="Corps du message..."></textarea>
+    <button class="btn green sm full" id="sendMailBtn" type="button">📧 Ouvrir dans mon client mail</button>
+    <button class="btn outline sm full" id="cancelMail" type="button">Annuler</button>
+  </div>
+</div></div>
 <script>
-const LS='salesCockpitV4Planning';
-const defaults={theme:'light',layout:['planningCard','sellerCard','tasksCard','financeCard'],texts:{title:'Sales Cockpit V4 Planning',subtitle:'Planning hebdo basé sur ton fichier Excel, avec phoning quotidien, rendez-vous, contrôle manager et mode admin.',planningTitle:'Agenda hebdo',sellersTitle:'Vendeurs',tasksTitle:'Contrôle manager',financeTitle:'Financements',kpi1label:'Objectif appels',kpi1foot:'appels / semaine',kpi2label:'Rendez-vous',kpi2foot:'créneaux',kpi3label:'Vendeurs',kpi3foot:'équipe',kpi4label:'Pause déjeuner',kpi4foot:'plage fixe'}, sellers:[{id:1,name:'Martial Gremont',team:'Volkswagen',target:11,done:7,rdv:2,status:'ok',notes:'Suivi reprises, financement et relances.'}], events:[
-{id:1,day:'Lundi',time:'09:00-10:00',title:'Brief équipe',detail:'Démarrage / objectifs',color:'blue'},
+const LS='salesCockpitV5';
+const defaults={theme:'light',texts:{title:'Sales Cockpit V5',subtitle:'Objectifs de vente · Phoning · Planning hebdo · Mode admin',sellersTitle:'Vendeurs',financeTitle:'Financements',planningTitle:'Agenda hebdomadaire',ctrlTitle:'Contrôle manager – Phoning',kpi1label:'Objectif ventes',kpi1foot:'ventes / mois',kpi2label:'Réalisé',kpi2foot:'ventes / mois',kpi3label:'Taux de réussite',kpi3foot:'objectif atteint',kpi4label:'Financements',kpi4foot:'dossiers',pkpi1label:'Appels objectif',pkpi1foot:'appels / semaine',pkpi2label:'RDV planifiés',pkpi2foot:'créneaux',pkpi3label:'Jours de phoning',pkpi3foot:'Lun → Sam',pkpi4label:'Pause déjeuner',pkpi4foot:'pause fixe'},
+sellers:[{id:1,name:'Martial Gremont',team:'Volkswagen',target:11,done:7,rdv:2,status:'ok',notes:'Suivi reprises, financement et relances.'},{id:2,name:'Yann Ormes',team:'Volkswagen',target:10,done:0,rdv:0,status:'amber',notes:'Nouveau vendeur – suivi à initialiser.'}],
+events:[
+{id:1,day:'Lundi',time:'09:00-10:00',title:'Brief équipe',detail:'Objectifs + organisation',color:'blue'},
 {id:2,day:'Lundi',time:'10:00-11:00',title:'Phoning relance chaude',detail:'Appels prioritaires',color:'green'},
-{id:3,day:'Mardi',time:'09:00-10:00',title:'Phoning leads web',detail:'Traitement des leads',color:'green'},
-{id:4,day:'Mercredi',time:'14:00-15:00',title:'RDV / essais',detail:'Planning clients',color:'blue'},
-{id:5,day:'Jeudi',time:'14:00-15:00',title:'Rachat + sourcing',detail:'VO / reprise',color:'amber'},
-{id:6,day:'Vendredi',time:'17:00-18:00',title:'Phoning confirmation RDV',detail:'Finaliser les venues',color:'green'}],
-tasks:[{id:1,jour:'Lundi',bloc1:'10h-11h',bloc2:'14h-16h',objectif:40,realise:'',ecart:'',commentaire:''},{id:2,jour:'Mardi',bloc1:'09h-11h',bloc2:'17h-19h',objectif:35,realise:'',ecart:'',commentaire:''}], finances:[{id:1,client:'Client A',type:'LOA',amount:28400,rate:3.2,status:'ok',notes:'Dossier complet'}]};
-let state=load(); let adminMode=false; let editingEventId=null; let editingFinanceId=null; let dragSource=null;
-const el={sellerList:document.getElementById('sellerList'),calendar:document.getElementById('calendar'),taskList:document.getElementById('taskList'),financeList:document.getElementById('financeList'),sellerFilter:document.getElementById('sellerFilter')};
+{id:3,day:'Lundi',time:'14:00-16:00',title:'Phoning rachat VO',detail:'',color:'green'},
+{id:4,day:'Mardi',time:'09:00-11:00',title:'Phoning leads web',detail:'Traitement des leads',color:'green'},
+{id:5,day:'Mardi',time:'14:00-16:00',title:'Showroom / RDV',detail:'Accueil clients',color:'blue'},
+{id:6,day:'Mercredi',time:'09:00-10:00',title:'Phoning rachat VO',detail:'',color:'green'},
+{id:7,day:'Mercredi',time:'14:00-16:00',title:'RDV / essais',detail:'Planning clients',color:'blue'},
+{id:8,day:'Jeudi',time:'09:00-11:00',title:'Phoning prospection',detail:'Appels massifs',color:'green'},
+{id:9,day:'Jeudi',time:'14:00-15:00',title:'Rachat + sourcing',detail:'VO / reprise',color:'amber'},
+{id:10,day:'Vendredi',time:'10:00-11:00',title:'Phoning signatures',detail:'Relance week-end',color:'green'},
+{id:11,day:'Vendredi',time:'14:00-16:00',title:'RDV / livraison',detail:'Vente + suivi',color:'blue'},
+{id:12,day:'Samedi',time:'09:00-10:00',title:'Phoning RDV du jour',detail:'',color:'green'},
+{id:13,day:'Samedi',time:'10:00-12:00',title:'Accueil showroom',detail:'',color:'blue'},
+{id:14,day:'Samedi',time:'14:00-18:00',title:'Vente intensive',detail:'',color:'amber'}],
+ctrl:[
+{id:1,jour:'Lundi',bloc1:'10h-11h',bloc2:'14h-16h',objectif:40,realise:'',ecart:'',commentaire:''},
+{id:2,jour:'Mardi',bloc1:'09h-11h',bloc2:'17h-19h',objectif:35,realise:'',ecart:'',commentaire:''},
+{id:3,jour:'Mercredi',bloc1:'09h-10h',bloc2:'16h-18h',objectif:30,realise:'',ecart:'',commentaire:''},
+{id:4,jour:'Jeudi',bloc1:'09h-11h',bloc2:'17h-19h',objectif:40,realise:'',ecart:'',commentaire:''},
+{id:5,jour:'Vendredi',bloc1:'10h-11h',bloc2:'17h-19h',objectif:30,realise:'',ecart:'',commentaire:''},
+{id:6,jour:'Samedi',bloc1:'09h-10h',bloc2:'16h-17h',objectif:15,realise:'',ecart:'',commentaire:''}],
+finances:[{id:1,client:'Client A',type:'LOA',amount:28400,rate:3.2,status:'ok',notes:'Dossier complet'}]};
+
+let state=load(); let adminMode=false; let editingEventId=null; let editingFinanceId=null; let editingSellerId=null; let dragSource=null;
 function load(){try{const s=localStorage.getItem(LS);return s?JSON.parse(s):structuredClone(defaults)}catch(e){return structuredClone(defaults)}}
 function save(){localStorage.setItem(LS,JSON.stringify(state));render()}
 function uid(){return Date.now()+Math.floor(Math.random()*1000)}
 function esc(v){return String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;')}
 function initials(n){return n.split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0].toUpperCase()).join('')}
 function colorClass(c){return c==='blue'?'blueBg':c==='amber'?'amberBg':c==='rose'?'roseBg':'greenBg'}
-function setAdmin(on){adminMode=on;document.body.classList.toggle('edit-on',on);document.querySelectorAll('[data-edit]').forEach(x=>x.contentEditable=on?'true':'false');document.querySelectorAll('.card').forEach(c=>{c.draggable=on;c.style.resize=on?'both':'none'})}
-function calc(){const calls=state.tasks.reduce((a,s)=>a+(+s.objectif||0),0);const rdv=state.events.length;document.getElementById('kpiCalls').textContent=calls;document.getElementById('kpiRdv').textContent=rdv;document.getElementById('kpiSellers').textContent=state.sellers.length}
+function setAdmin(on){adminMode=on;document.body.classList.toggle('edit-on',on);document.querySelectorAll('[data-edit]').forEach(x=>x.contentEditable=on?'true':'false');document.querySelectorAll('.card').forEach(c=>{c.draggable=on;c.style.resize=on?'both':'none'});document.getElementById('adminBtn').textContent=on?'🔓 Admin actif':'🔒 Admin'}
+function calcVentes(){const t=state.sellers.reduce((a,s)=>a+(+s.target||0),0);const d=state.sellers.reduce((a,s)=>a+(+s.done||0),0);const r=t>0?Math.round((d/t)*100):0;document.getElementById('kpiTarget').textContent=t;document.getElementById('kpiDone').textContent=d;document.getElementById('kpiRate').textContent=r+'%';document.getElementById('kpiFin').textContent=state.finances.length}
+function calcPhoning(){const calls=state.ctrl.reduce((a,c)=>a+(+c.objectif||0),0);document.getElementById('kpiCalls').textContent=calls;document.getElementById('kpiRdv').textContent=state.events.length}
 function renderTexts(){Object.entries(state.texts||{}).forEach(([k,v])=>{const n=document.querySelector(`[data-edit="${k}"]`);if(n)n.textContent=v})}
-function renderFilter(){el.sellerFilter.innerHTML='<option value="all">Tous</option>'+state.sellers.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('')}
-function renderSellers(){const q=(sellerSearch.value||'').toLowerCase();const f=el.sellerFilter.value||'all';const arr=state.sellers.filter(s=>(f==='all'||String(s.id)===f)&&(!q||`${s.name} ${s.team} ${s.notes}`.toLowerCase().includes(q)));el.sellerList.innerHTML=arr.map(s=>{const pct=Math.min(100,Math.round(((+s.done||0)/((+s.target||1)))*100));const status=s.status||'ok';const label=status==='ok'?'Dans le rythme':status==='amber'?'À surveiller':'En retard';return `<div class="person-row"><div class="person"><div class="avatar">${initials(s.name)}</div><div><div><strong contenteditable="${adminMode}" onblur="updateSeller(${s.id},'name',this.textContent)">${esc(s.name)}</strong></div><div class="small" contenteditable="${adminMode}" onblur="updateSeller(${s.id},'team',this.textContent)">${esc(s.team)}</div><div class="small" contenteditable="${adminMode}" onblur="updateSeller(${s.id},'notes',this.textContent)">${esc(s.notes)}</div></div></div><div><div class="small">Objectif</div><strong contenteditable="${adminMode}" onblur="updateSeller(${s.id},'target',this.textContent)">${+s.target||0}</strong></div><div><div class="small">Réalisé</div><strong contenteditable="${adminMode}" onblur="updateSeller(${s.id},'done',this.textContent)">${+s.done||0}</strong></div><div class="row"><span class="tag ${status}">${label}</span></div></div>`}).join('')||'<div class="small">Aucun résultat</div>'}
-function renderCalendar(){const days=['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];el.calendar.innerHTML=days.map(d=>`<div class="day" data-card="planningCard"><h4>${d}</h4>${state.events.filter(e=>e.day===d).map(e=>`<div class="event ${colorClass(e.color)}" onclick="editEvent(${e.id})"><button class="del" onclick="event.stopPropagation();deleteEvent(${e.id})">×</button><strong>${esc(e.time)}</strong> ${esc(e.title)}<div class="mini">${esc(e.detail)}</div></div>`).join('')||'<div class="small">Aucun rendez-vous</div>'}</div>`).join('')}
-function renderTasks(){el.taskList.innerHTML=state.tasks.map(t=>`<div class="item"><input class="txt" value="${esc(t.jour||'')}" onblur="updateCtrl(${t.id},'jour',this.value)"><input class="txt" value="${esc(t.bloc1||'')}" onblur="updateCtrl(${t.id},'bloc1',this.value)"><input class="txt" value="${esc(t.bloc2||'')}" onblur="updateCtrl(${t.id},'bloc2',this.value)"><input class="txt" type="number" value="${t.objectif??''}" onblur="updateCtrl(${t.id},'objectif',this.value)"><input class="txt" value="${esc(t.realise||'')}" placeholder="Réalisé" onblur="updateCtrl(${t.id},'realise',this.value)"><input class="txt" value="${esc(t.ecart||'')}" placeholder="Écart" onblur="updateCtrl(${t.id},'ecart',this.value)"><input class="txt" value="${esc(t.commentaire||'')}" placeholder="Commentaire" onblur="updateCtrl(${t.id},'commentaire',this.value)"><button class="btn danger sm" onclick="deleteCtrl(${t.id})">Suppr</button></div>`).join('')}
-function renderFinances(){el.financeList.innerHTML=state.finances.map(f=>`<div class="fitem"><div><strong>${esc(f.client)}</strong><div class="small">${esc(f.type)} • ${esc(f.notes)}</div></div><div class="money ${f.status==='ok'?'plus':f.status==='rose'?'minus':''}">${Number(f.amount||0).toLocaleString('fr-FR')} €</div><div class="row"><span class="tag ${f.status}">${f.status==='ok'?'Accepté':f.status==='amber'?'En attente':'Refusé'}</span><button class="btn green sm" onclick="editFinance(${f.id})">Modifier</button><button class="btn danger sm" onclick="deleteFinance(${f.id})">Supprimer</button></div></div>`).join('')}
-function render(){document.documentElement.dataset.theme=state.theme||'light';renderTexts();document.getElementById('themeBtn').textContent=state.theme==='dark'?'Mode clair':'Mode sombre';calc();renderFilter();renderSellers();renderCalendar();renderTasks();renderFinances();applyLayout();document.querySelectorAll('[data-edit]').forEach(n=>n.contentEditable=adminMode?'true':'false')}
-function applyLayout(){const order=state.layout||['planningCard','sellerCard','tasksCard','financeCard'];const dash=document.getElementById('dashboard');order.forEach(id=>{const c=dash.querySelector(`.card[data-block="${id}"]`);if(c)dash.appendChild(c)})}
-window.updateSeller=(id,key,val)=>{const s=state.sellers.find(x=>x.id===id);if(!s)return;s[key]=['target','done','rdv'].includes(key)?+val||0:val;save()}
-window.updateCtrl=(id,key,val)=>{const t=state.tasks.find(x=>x.id===id);if(!t)return;t[key]=key==='objectif'?+val||0:val;save()}
-window.deleteCtrl=(id)=>{state.tasks=state.tasks.filter(x=>x.id!==id);save()}
-window.deleteSeller=(id)=>{state.sellers=state.sellers.filter(x=>x.id!==id);save()}
+function renderFilter(){sellerFilter.innerHTML='<option value="all">Tous</option>'+state.sellers.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('')}
+function renderSellers(){const q=(sellerSearch.value||'').toLowerCase();const f=sellerFilter.value||'all';const arr=state.sellers.filter(s=>(f==='all'||String(s.id)===f)&&(!q||`${s.name} ${s.team}`.toLowerCase().includes(q)));document.getElementById('sellerList').innerHTML=arr.map(s=>{const pct=Math.min(100,Math.round(((+s.done||0)/Math.max(+s.target||1,1))*100));const label=s.status==='ok'?'Dans le rythme':s.status==='amber'?'À surveiller':'En retard';return`<div class="person-row"><div class="person"><div class="avatar">${initials(s.name)}</div><div><strong>${esc(s.name)}</strong><div class="small">${esc(s.team)}</div><div class="progress"><div class="bar" style="width:${pct}%"></div></div></div></div><div><div class="small">Objectif</div><strong>${+s.target||0}</strong></div><div><div class="small">Réalisé</div><strong>${+s.done||0}</strong></div><div style="display:flex;gap:6px;flex-wrap:wrap"><span class="tag ${s.status||'ok'}">${label}</span><button class="btn green sm" onclick="openSellerModal(${s.id})">Modifier</button><button class="btn danger sm" onclick="deleteSeller(${s.id})">Suppr</button></div></div>`}).join('')||'<div class="small">Aucun vendeur</div>'}
+function renderCalendar(){const days=['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];document.getElementById('calendar').innerHTML=days.map(d=>`<div class="day"><h4>${d}</h4><div class="pause">⏸ 12h-14h Pause déjeuner</div>${state.events.filter(e=>e.day===d).map(e=>`<div class="slot ${colorClass(e.color)}" onclick="editEvent(${e.id})"><button class="sdel" onclick="event.stopPropagation();deleteEvent(${e.id})">×</button><strong>${esc(e.time)}</strong><br>${esc(e.title)}<div class="mini">${esc(e.detail)}</div></div>`).join('')||'<div class="small" style="margin-top:8px">Aucun créneau</div>'}</div>`).join('')}
+function renderCtrl(){document.getElementById('ctrlBody').innerHTML=state.ctrl.map(t=>`<tr><td><input value="${esc(t.jour)}" onblur="updateCtrl(${t.id},'jour',this.value)"></td><td><input value="${esc(t.bloc1)}" onblur="updateCtrl(${t.id},'bloc1',this.value)"></td><td><input value="${esc(t.bloc2)}" onblur="updateCtrl(${t.id},'bloc2',this.value)"></td><td><input type="number" value="${t.objectif??''}" onblur="updateCtrl(${t.id},'objectif',this.value)"></td><td><input value="${esc(t.realise)}" placeholder="0" onblur="updateCtrl(${t.id},'realise',this.value)"></td><td><input value="${esc(t.ecart)}" placeholder="0" onblur="updateCtrl(${t.id},'ecart',this.value)"></td><td><input value="${esc(t.commentaire)}" placeholder="..." onblur="updateCtrl(${t.id},'commentaire',this.value)"></td><td><button class="btn danger sm" onclick="deleteCtrl(${t.id})">Suppr</button></td></tr>`).join('')}
+function renderFinances(){document.getElementById('financeList').innerHTML=state.finances.map(f=>`<div class="fitem"><div><strong>${esc(f.client)}</strong><div class="small">${esc(f.type)} • ${esc(f.notes)}</div></div><div class="money ${f.status==='ok'?'plus':f.status==='rose'?'minus':''}">${Number(f.amount||0).toLocaleString('fr-FR')} €</div><div style="display:flex;gap:6px;flex-wrap:wrap"><span class="tag ${f.status}">${f.status==='ok'?'Accepté':f.status==='amber'?'En attente':'Refusé'}</span><button class="btn green sm" onclick="editFinance(${f.id})">Modifier</button><button class="btn danger sm" onclick="deleteFinance(${f.id})">Suppr</button></div></div>`).join('')}
+function render(){document.documentElement.dataset.theme=state.theme||'light';document.getElementById('themeBtn').textContent=state.theme==='dark'?'Mode clair':'Mode sombre';renderTexts();calcVentes();calcPhoning();renderFilter();renderSellers();renderCalendar();renderCtrl();renderFinances();document.querySelectorAll('[data-edit]').forEach(n=>n.contentEditable=adminMode?'true':'false')}
+
+// TABS
+document.getElementById('mainNav').querySelectorAll('.tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));t.classList.add('active');document.getElementById('page-'+t.dataset.page).classList.add('active')})
+
+// ADMIN
+adminBtn.onclick=()=>adminPanel.classList.add('open');closeAdmin.onclick=()=>adminPanel.classList.remove('open');unlockAdmin.onclick=()=>{if(adminPass.value==='vw2026'){setAdmin(true);adminPanel.classList.remove('open')}else alert('Mot de passe incorrect')};lockAdmin.onclick=()=>setAdmin(false)
+themeBtn.onclick=()=>{state.theme=state.theme==='dark'?'light':'dark';save()}
+resetBtn.onclick=()=>{if(confirm('Réinitialiser tout ?')){localStorage.removeItem(LS);location.reload()}}
+
+// SELLERS
+window.openSellerModal=(id)=>{editingSellerId=id||null;if(id){const s=state.sellers.find(x=>x.id===id);if(!s)return;sName.value=s.name;sTeam.value=s.team;sTarget.value=s.target;sDone.value=s.done;sRdv.value=s.rdv;sStatus.value=s.status;sNotes.value=s.notes}else{sellerForm.reset();sTeam.value='Volkswagen'}sellerModal.classList.add('open')}
+addSellerBtn.onclick=()=>openSellerModal(null)
+closeSellerModal.onclick=cancelSeller.onclick=()=>sellerModal.classList.remove('open')
+sellerForm.onsubmit=e=>{e.preventDefault();const obj={name:sName.value.trim(),team:sTeam.value.trim(),target:+sTarget.value||0,done:+sDone.value||0,rdv:+sRdv.value||0,status:sStatus.value,notes:sNotes.value.trim()};if(editingSellerId){Object.assign(state.sellers.find(x=>x.id===editingSellerId),obj)}else{state.sellers.push({id:uid(),...obj})}sellerModal.classList.remove('open');save()}
+window.deleteSeller=(id)=>{if(confirm('Supprimer ?')){state.sellers=state.sellers.filter(x=>x.id!==id);save()}}
+sellerSearch.oninput=renderSellers;sellerFilter.onchange=renderSellers
+
+// EVENTS
 window.editEvent=(id)=>{const e=state.events.find(x=>x.id===id);if(!e)return;editingEventId=id;eTitle.value=e.title;eDay.value=e.day;eTime.value=e.time;eColor.value=e.color;eDetail.value=e.detail;eventModal.classList.add('open')}
 window.deleteEvent=(id)=>{state.events=state.events.filter(x=>x.id!==id);save()}
+addEventBtn.onclick=()=>{editingEventId=null;eventForm.reset();eDay.value='Lundi';eTime.value='09:00-10:00';eColor.value='green';eventModal.classList.add('open')}
+closeModal.onclick=cancelEvent.onclick=()=>eventModal.classList.remove('open')
+eventForm.onsubmit=e=>{e.preventDefault();const obj={title:eTitle.value.trim(),day:eDay.value,time:eTime.value.trim(),color:eColor.value,detail:eDetail.value.trim()};if(editingEventId){Object.assign(state.events.find(x=>x.id===editingEventId),obj)}else{state.events.push({id:uid(),...obj})}eventModal.classList.remove('open');save()}
+
+// CTRL
+window.updateCtrl=(id,key,val)=>{const t=state.ctrl.find(x=>x.id===id);if(!t)return;t[key]=key==='objectif'?+val||0:val;save()}
+window.deleteCtrl=(id)=>{state.ctrl=state.ctrl.filter(x=>x.id!==id);save()}
+addCtrlBtn.onclick=()=>{state.ctrl.push({id:uid(),jour:'',bloc1:'',bloc2:'',objectif:0,realise:'',ecart:'',commentaire:''});save()}
+loadModelBtn.onclick=()=>{state.events=structuredClone(defaults.events);state.ctrl=structuredClone(defaults.ctrl);save()}
+
+// FINANCES
 window.editFinance=(id)=>{const f=state.finances.find(x=>x.id===id);if(!f)return;editingFinanceId=id;fClient.value=f.client;fType.value=f.type;fAmount.value=f.amount;fRate.value=f.rate;fStatus.value=f.status;fNotes.value=f.notes;financeModal.classList.add('open')}
 window.deleteFinance=(id)=>{state.finances=state.finances.filter(x=>x.id!==id);save()}
-function makeDraggable(){document.querySelectorAll('.card[data-block]').forEach(card=>{card.draggable=adminMode;card.ondragstart=e=>{if(!adminMode)return;dragSource=card.dataset.block;card.classList.add('dragging')};card.ondragend=()=>card.classList.remove('dragging');card.ondragover=e=>{if(!adminMode)return;e.preventDefault();card.classList.add('dropzone')};card.ondragleave=()=>card.classList.remove('dropzone');card.ondrop=e=>{if(!adminMode)return;e.preventDefault();card.classList.remove('dropzone');const target=card.dataset.block;const arr=state.layout||['planningCard','sellerCard','tasksCard','financeCard'];const a=arr.indexOf(dragSource),b=arr.indexOf(target);if(a>-1&&b>-1&&dragSource!==target){arr.splice(a,1);arr.splice(b,0,dragSource);state.layout=arr;save();}}})}
-function saveLayout(){state.layout=[...document.querySelectorAll('.card[data-block]')].map(c=>c.dataset.block);save()}
-adminBtn.onclick=()=>adminPanel.classList.add('open');closeAdmin.onclick=()=>adminPanel.classList.remove('open');unlockAdmin.onclick=()=>{if(adminPass.value==='vw2026'){setAdmin(true);adminPanel.classList.remove('open');makeDraggable()}else alert('Mot de passe incorrect')};lockAdmin.onclick=()=>{setAdmin(false);makeDraggable()};saveLayoutBtn.onclick=saveLayout
-themeBtn.onclick=()=>{state.theme=state.theme==='dark'?'light':'dark';save()}
-resetBtn.onclick=()=>{if(confirm('Réinitialiser ?')){localStorage.removeItem(LS);location.reload()}}
-addSellerTop.onclick=()=>{state.sellers.push({id:uid(),name:'Nouveau vendeur',team:'Volkswagen',target:0,done:0,rdv:0,status:'amber',notes:''});save()}
-addTaskBtn.onclick=()=>{state.tasks.push({id:uid(),jour:'',bloc1:'',bloc2:'',objectif:0,realise:'',ecart:'',commentaire:''});save()}
-addFinanceBtn.onclick=()=>{state.finances.push({id:uid(),client:'Nouveau client',type:'LOA',amount:0,rate:0,status:'amber',notes:''});save()}
-addEventBtn.onclick=()=>{editingEventId=null;eventForm.reset();eDay.value='Lundi';eTime.value='09:00';eColor.value='green';eventModal.classList.add('open')}
-loadExcelBtn.onclick=()=>{state.events=structuredClone(defaults.events);state.tasks=structuredClone(defaults.tasks);save()}
-sellerSearch.oninput=renderSellers;sellerFilter.onchange=renderSellers
-eventForm.onsubmit=e=>{e.preventDefault();const obj={title:eTitle.value.trim(),day:eDay.value.trim(),time:eTime.value.trim(),color:eColor.value,detail:eDetail.value.trim()};if(editingEventId){Object.assign(state.events.find(x=>x.id===editingEventId),obj)}else{state.events.push({id:uid(),...obj})}eventModal.classList.remove('open');save()}
+addFinanceBtn.onclick=()=>{editingFinanceId=null;financeForm.reset();fType.value='LOA';financeModal.classList.add('open')}
+closeFinance.onclick=cancelFinance.onclick=()=>financeModal.classList.remove('open')
 financeForm.onsubmit=e=>{e.preventDefault();const obj={client:fClient.value.trim(),type:fType.value.trim(),amount:+fAmount.value||0,rate:+fRate.value||0,status:fStatus.value,notes:fNotes.value.trim()};if(editingFinanceId){Object.assign(state.finances.find(x=>x.id===editingFinanceId),obj)}else{state.finances.push({id:uid(),...obj})}financeModal.classList.remove('open');save()}
-closeModal.onclick=()=>eventModal.classList.remove('open');cancelEvent.onclick=()=>eventModal.classList.remove('open');closeFinance.onclick=()=>financeModal.classList.remove('open');cancelFinance.onclick=()=>financeModal.classList.remove('open')
+
+// TEXT EDIT
 document.querySelectorAll('[data-edit]').forEach(elm=>elm.addEventListener('blur',()=>{if(!adminMode)return;state.texts[elm.dataset.edit]=elm.textContent.trim();save()}))
-render();makeDraggable();
+render();
+
+// MAIL
+function fillMailModal(){
+  const sel = document.getElementById('mailSeller');
+  sel.innerHTML = state.sellers.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');
+  updateMailBody();
+}
+function updateMailBody(){
+  const sid = +document.getElementById('mailSeller').value;
+  const s = state.sellers.find(x=>x.id===sid);
+  if(!s) return;
+  const pct = s.target>0?Math.round((s.done/s.target)*100):0;
+  const ecart = (s.target||0)-(s.done||0);
+  document.getElementById('mailEmail').value = '';
+  document.getElementById('mailBody').value = `Bonjour ${s.name},
+
+Voici ton point de suivi :
+- Objectif : ${s.target} ventes
+- Réalisé : ${s.done} ventes (${pct}%)
+- Écart : ${ecart} ventes restantes
+- Statut : ${s.status==='ok'?'Dans le rythme':s.status==='amber'?'À surveiller':'En retard'}
+
+Notes : ${s.notes||'–'}
+
+Merci de mettre à jour tes chiffres dès que possible.
+
+Cordialement,
+Le manager`;
+}
+document.getElementById('openMailBtn').onclick=()=>{if(!adminMode){alert('Active le mode admin d'abord.');return;}fillMailModal();mailModal.classList.add('open');};
+document.getElementById('closeMail').onclick=()=>mailModal.classList.remove('open');
+document.getElementById('cancelMail').onclick=()=>mailModal.classList.remove('open');
+document.getElementById('mailSeller').onchange=updateMailBody;
+document.getElementById('sendMailBtn').onclick=()=>{
+  const email = document.getElementById('mailEmail').value.trim();
+  const subject = encodeURIComponent(document.getElementById('mailSubject').value.trim());
+  const body = encodeURIComponent(document.getElementById('mailBody').value.trim());
+  if(!email){alert('Ajoute l\'adresse email du vendeur.');return;}
+  window.open(`mailto:${email}?subject=${subject}&body=${body}`,'_blank');
+  mailModal.classList.remove('open');
+};
+
 </script>
 </body>
 </html>
