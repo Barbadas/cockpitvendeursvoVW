@@ -29,7 +29,7 @@ input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);
 .calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px}.day{min-height:230px;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--card)}.day h4{margin:0 0 8px;font-size:16px;color:var(--primary)}.event{padding:8px 10px;border-radius:12px;margin-top:8px;font-size:13px;color:#fff;cursor:pointer;position:relative}.event .mini{font-size:12px;opacity:.9;margin-top:3px}.event .del{position:absolute;top:6px;right:8px;background:rgba(255,255,255,.2);border:0;color:#fff;border-radius:999px;width:22px;height:22px;cursor:pointer}
 .blueBg{background:linear-gradient(135deg,var(--primary2),#2563eb)}.greenBg{background:linear-gradient(135deg,var(--ok),#14b8a6)}.amberBg{background:linear-gradient(135deg,var(--warn),#f97316)}.roseBg{background:linear-gradient(135deg,var(--danger),#ec4899)}
 .stats{display:grid;gap:10px}.stat{display:flex;justify-content:space-between;gap:10px;padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--card)}.sr{position:absolute;left:-9999px}
-.finance{display:grid;gap:10px}.fitem{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--card)}.money{font-weight:900}.plus{color:var(--primary)}.minus{color:var(--danger)}
+.finance{display:grid;gap:10px}.fitem{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--card)}.money{font-weight:900}.plus{color:var(--primary)}.minus{color:var(--danger)}.dragging{outline:2px dashed var(--primary);opacity:.7}.edit-on [contenteditable="true"]{outline:1px dashed var(--primary);border-radius:6px;padding:2px 4px}
 @media(max-width:1200px){.kpis,.main,.bottom,.person-row,.item,.editor,.calendar,.finance{grid-template-columns:1fr 1fr}.person-row{grid-template-columns:1fr}.top{align-items:stretch}.wrap{padding:14px}}
 @media(max-width:720px){.kpis,.main,.bottom,.calendar,.editor,.item,.person-row,.finance{grid-template-columns:1fr}.item{grid-template-columns:1fr}.modal-card{padding:14px}}
 </style>
@@ -39,7 +39,7 @@ input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);
   <section class="hero">
     <div class="top">
       <div><div class="h1">Sales Cockpit V10 VW</div><div class="sub">La structure finale de la V10, avec le design Volkswagen bleu/blanc/gris, plus lisible et plus corporate.</div></div>
-      <div class="row"><button class="btn secondary" id="themeBtn">Mode sombre</button><button class="btn secondary" id="resetBtn">Réinitialiser</button><button class="btn" id="addSellerTop">+ Vendeur</button></div>
+      <div class="row"><button class="btn secondary" id="themeBtn">Mode sombre</button><button class="btn secondary" id="adminBtn">Admin</button><button class="btn secondary" id="resetBtn">Réinitialiser</button><button class="btn" id="addSellerTop">+ Vendeur</button></div>
     </div>
   </section>
 
@@ -74,7 +74,7 @@ input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);
   </div>
 
   <div class="grid bottom">
-    <div class="card">
+    <div class="card" id="planningCard">
       <div class="head"><h2>Planning semaine</h2><span class="tag blue">Plus grand</span></div>
       <div class="calendar" id="calendar"></div>
     </div>
@@ -109,6 +109,8 @@ input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);
 </div>
 
 <div class="modal" id="eventModal"><div class="modal-card"><div class="modal-head"><h2 style="margin:0">Créer / modifier un créneau</h2><button class="x" id="closeModal">Fermer</button></div><form id="eventForm" class="editor"><input class="full" id="eTitle" placeholder="Titre du créneau"><input id="eDay" placeholder="Jour" value="Lundi"><input id="eTime" placeholder="Heure" value="09:00"><select id="eColor"><option value="green">Vert</option><option value="blue">Bleu</option><option value="amber">Orange</option><option value="rose">Rose</option></select><textarea class="full" id="eDetail" placeholder="Détail"></textarea><div class="full row"><button class="btn sm" type="submit">Enregistrer</button><button class="btn secondary sm" type="button" id="cancelEvent">Annuler</button></div></form></div></div>
+
+<div class="modal" id="adminPanel"><div class="modal-card"><div class="modal-head"><h2 style="margin:0">Mode admin</h2><button class="x" id="closeAdmin">Fermer</button></div><div class="editor"><input class="full" id="adminPass" placeholder="Mot de passe admin" type="password"><button class="btn sm" id="unlockAdmin" type="button">Déverrouiller</button><button class="btn secondary sm" id="lockAdmin" type="button">Verrouiller</button><div class="full small">En mode admin, tu peux modifier les textes directement et déplacer les blocs par glisser-déposer.</div></div></div></div>
 <div class="modal" id="financeModal"><div class="modal-card"><div class="modal-head"><h2 style="margin:0">Créer / modifier un financement</h2><button class="x" id="closeFinance">Fermer</button></div><form id="financeForm" class="editor"><input class="full" id="fClient" placeholder="Client"><input id="fType" placeholder="Type" value="LOA"><input id="fAmount" type="number" placeholder="Montant"><input id="fRate" type="number" placeholder="Taux %"><select id="fStatus"><option value="ok">Accepté</option><option value="amber">En attente</option><option value="rose">Refusé</option></select><textarea class="full" id="fNotes" placeholder="Notes"></textarea><div class="full row"><button class="btn sm" type="submit">Enregistrer</button><button class="btn secondary sm" type="button" id="cancelFinance">Annuler</button></div></form></div></div>
 
 <script>
@@ -128,6 +130,11 @@ const defaults={theme:'light',selectedFilter:'all',history:[], sellers:[
 {id:2,client:'Client B',type:'Crédit',amount:19800,rate:4.1,status:'amber',notes:'En attente de validation'}
 ]};
 let state=load(); let editingSellerId=null; let editingEventId=null; let editingFinanceId=null;
+
+const ADMIN_PASS='vw2026';
+let adminMode=false;
+function setAdmin(on){adminMode=on;document.body.classList.toggle('edit-on',on);document.querySelectorAll('.card').forEach(c=>c.draggable=on);document.querySelectorAll('[contenteditable]').forEach(x=>x.contentEditable=on?'true':'false');}
+function moveCard(from,to){const cards=[...document.querySelectorAll('.grid.main > .card, .grid.bottom > .card')];const a=cards[from],b=cards[to];if(!a||!b||a===b)return;const parent=a.parentElement;const arr=[...parent.children];const ai=arr.indexOf(a),bi=arr.indexOf(b);if(ai<0||bi<0)return; if(ai<bi) parent.insertBefore(a,b.nextSibling); else parent.insertBefore(a,b);}
 const el={sellerList:document.getElementById('sellerList'),calendar:document.getElementById('calendar'),taskList:document.getElementById('taskList'),financeList:document.getElementById('financeList'),sellerFilter:document.getElementById('sellerFilter'),eventModal:document.getElementById('eventModal'),financeModal:document.getElementById('financeModal'),statsBox:document.getElementById('statsBox'),historyList:document.getElementById('historyList')};
 function load(){try{const s=localStorage.getItem(LS);return s?JSON.parse(s):structuredClone(defaults)}catch(e){return structuredClone(defaults)}}
 function save(msg='Sauvegarde'){localStorage.setItem(LS,JSON.stringify(state));pushHistory(msg);render()}
